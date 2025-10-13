@@ -27,6 +27,14 @@ function Login() {
     setLoading(true);
     setError('');
 
+    // Validate UMN Crookston email domain
+    const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/;
+    if (!umnEmailRegex.test(formData.email)) {
+      setError('Please use your UMN Crookston email (@crk.umn.edu)');
+      setLoading(false);
+      return;
+    }
+
     try {
       // TODO: Replace with actual API call
       // Simulate API call
@@ -88,7 +96,7 @@ function Login() {
                   type="email"
                   name="email"
                   className="form-input"
-                  placeholder="Enter your email"
+                  placeholder="your.name@crk.umn.edu"
                   value={formData.email}
                   onChange={handleChange}
                   style={{ paddingLeft: '40px' }}

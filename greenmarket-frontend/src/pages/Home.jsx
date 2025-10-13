@@ -1,23 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf, Users, Recycle, ShoppingBag, ArrowRight, Star } from 'lucide-react';
+import AuthPopup from '../components/AuthPopup';
+import AuthNotification from '../components/AuthNotification';
+import AuthContext from '../context/AuthContext';
 
 function Home() {
+  const { isAuthenticated } = useContext(AuthContext);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  // Show notification after 1 second, then auth popup after countdown
+  useEffect(() => {
+    if (!isAuthenticated) {
+      const notificationTimer = setTimeout(() => {
+        setShowNotification(true);
+      }, 1000); // Show notification after 1 second
+
+      return () => clearTimeout(notificationTimer);
+    }
+  }, [isAuthenticated]);
+
+  const handleCloseAuthPopup = () => {
+    setShowAuthPopup(false);
+  };
+
+  const handleDismissNotification = () => {
+    setShowNotification(false);
+  };
+
+  const handleShowAuthFromNotification = () => {
+    setShowNotification(false);
+    setShowAuthPopup(true);
+  };
+
   const features = [
     {
       icon: <Leaf size={48} color="var(--accent-green)" />,
       title: "100% Sustainable",
-      description: "Every product on our marketplace meets strict environmental standards"
+      description: "Every product are donations from students and our community"
     },
     {
       icon: <Users size={48} color="var(--accent-green)" />,
       title: "Community Driven",
-      description: "Supporting local farmers, artisans, and eco-conscious businesses"
+      description: "Supporting students and community"
     },
     {
       icon: <Recycle size={48} color="var(--accent-green)" />,
       title: "Zero Waste",
-      description: "Promoting circular economy with reusable and biodegradable products"
+      description: "Promoting circular economy with reusable products"
     }
   ];
 
@@ -289,6 +320,20 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Auth Notification - Shows after 1 second with countdown */}
+      {showNotification && (
+        <AuthNotification
+          onDismiss={handleDismissNotification}
+          onShowAuth={handleShowAuthFromNotification}
+        />
+      )}
+
+      {/* Auth Popup - Shows after notification countdown or can be triggered manually */}
+      <AuthPopup 
+        isOpen={showAuthPopup} 
+        onClose={handleCloseAuthPopup} 
+      />
     </div>
   );
 }

@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Leaf, Menu, X, User, ShoppingCart, Plus } from 'lucide-react';
-import AuthContext from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-  const { user, logout, isAuthenticated } = useContext(AuthContext);
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

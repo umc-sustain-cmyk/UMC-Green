@@ -126,6 +126,7 @@ The application is fully responsive and optimized for:
 - JWT token management
 - Protected routes
 - User role management (buyer/seller)
+- **Auto-prompt Authentication**: Pop-up appears after 5 seconds with countdown notification
 
 ### Product Management
 - Product listing with images

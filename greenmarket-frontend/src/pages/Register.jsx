@@ -43,8 +43,8 @@ function Register() {
       setError('Email is required');
       return false;
     }
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError('Please enter a valid email address');
+    if (!/^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/.test(formData.email)) {
+      setError('Please use your UMN Crookston email (@crk.umn.edu)');
       return false;
     }
     if (!formData.password) {
@@ -180,7 +180,7 @@ function Register() {
                   type="email"
                   name="email"
                   className="form-input"
-                  placeholder="Enter your email"
+                  placeholder="your.name@crk.umn.edu"
                   value={formData.email}
                   onChange={handleChange}
                   style={{ paddingLeft: '40px' }}
