@@ -94,13 +94,13 @@ const Item = sequelize.define('Item', {
   tableName: 'items',
   indexes: [
     {
-      fields: ['userId']
+      fields: ['user_id']
     },
     {
       fields: ['category']
     },
     {
-      fields: ['isAvailable']
+      fields: ['is_available']
     },
     {
       fields: ['price']

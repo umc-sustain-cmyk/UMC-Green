@@ -80,7 +80,7 @@ const User = sequelize.define('User', {
       fields: ['email']
     },
     {
-      fields: ['studentId']
+      fields: ['student_id']
     }
   ],
   hooks: {
