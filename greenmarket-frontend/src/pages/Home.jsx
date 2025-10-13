@@ -307,7 +307,7 @@ function Home() {
           </p>
           <div className="flex-center gap-3">
             <Link to="/marketplace" className="btn btn-accent">
-              Start Shopping Now
+              Start Looking Now
               <ArrowRight size={18} />
             </Link>
             <Link to="/register" className="btn" style={{
@@ -315,7 +315,7 @@ function Home() {
               color: 'white',
               border: '2px solid white'
             }}>
-              Become a Seller
+              Become a Donator
             </Link>
           </div>
         </div>
