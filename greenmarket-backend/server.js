@@ -76,9 +76,34 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully');
     
-    // Sync database models (create tables)
-    await sequelize.sync({ alter: true });
-    console.log('✅ Database models synchronized');
+    // Migration strategy:
+    // - In production, we do NOT call `sync()` here. Migrations should be applied during deploy.
+    // - In development you can opt-in to run migrations automatically by setting AUTO_MIGRATE=true
+    // - For tests, migrations are handled by the test setup (sqlite in-memory or CI migrations)
+    if (process.env.NODE_ENV === 'production') {
+      console.log('ℹ️ Running in production mode – ensure migrations are applied before starting the app.');
+    } else if (process.env.NODE_ENV === 'test') {
+      console.log('ℹ️ Test environment detected – skipping runtime migrations/sync.');
+    } else {
+      if (process.env.AUTO_MIGRATE === 'true') {
+        console.log('🔁 AUTO_MIGRATE=true — applying migrations before starting server');
+        // Run migrations via sequelize-cli if available
+        try {
+          const { execSync } = require('child_process');
+          execSync('npx sequelize-cli db:migrate', { stdio: 'inherit' });
+        } catch (err) {
+          console.warn('Failed to run automatic migrations:', err && err.message ? err.message : err);
+        }
+      } else {
+        // For local dev when you want quick iteration, you can still use sync by setting AUTO_SYNC=true
+        if (process.env.AUTO_SYNC === 'true') {
+          await sequelize.sync({ alter: true });
+          console.log('✅ Database models synchronized (sync)');
+        } else {
+          console.log('ℹ️ Skipping runtime sync. To automatically run migrations in dev set AUTO_MIGRATE=true or to sync set AUTO_SYNC=true');
+        }
+      }
+    }
     
     // Start server
     app.listen(PORT, () => {
