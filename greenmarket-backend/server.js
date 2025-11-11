@@ -93,6 +93,9 @@ const startServer = async () => {
   }
 };
 
-startServer();
+// Only start the server when not running tests. Tests will import `app` directly.
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
+}
 
 module.exports = app;

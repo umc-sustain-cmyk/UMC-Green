@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-sqlite:
+    name: Fast tests (SQLite in-memory)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (backend)
+        working-directory: greenmarket-backend
+        run: npm ci
+
+      - name: Run tests (backend)
+        working-directory: greenmarket-backend
+        env:
+          NODE_ENV: test
+        run: npm test
+
+  test-mysql:
+    name: High-fidelity tests (MySQL service)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: greenmarket
+        options: >-
+          --health-cmd="mysqladmin ping --silent -h 127.0.0.1 -u root -prootpassword"
+          --health-interval=5s --health-timeout=2s --health-retries=10
+        ports:
+          - 3306:3306
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (backend)
+        working-directory: greenmarket-backend
+        run: npm ci
+
+      - name: Wait for MySQL to be ready
+        working-directory: greenmarket-backend
+        env:
+          DB_USER: root
+          DB_PASSWORD: rootpassword
+        run: |
+          node -e "const mysql=require('mysql2/promise');(async()=>{for(let i=0;i<60;i++){try{await mysql.createConnection({host:'127.0.0.1',user:process.env.DB_USER||'root',password:process.env.DB_PASSWORD,port:3306});console.log('MySQL ready');process.exit(0)}catch(e){process.stdout.write('.');await new Promise(r=>setTimeout(r,1000))}};console.error('MySQL not ready');process.exit(1)})();"
+
+      - name: Run tests (backend against MySQL)
+        working-directory: greenmarket-backend
+        env:
+          NODE_ENV: test
+          TEST_DB: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: rootpassword
+          DB_NAME: greenmarket
+          JWT_SECRET: ci-test-secret
+        run: |
+          # Run migrations against MySQL first, then run tests
+          npm run migrate
+          npm test

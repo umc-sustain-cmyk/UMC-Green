@@ -1,0 +1,81 @@
+GreenMarket Project Summary
+==========================
+
+Date: 2025-11-11
+Location: UMC-Green repository (root)
+
+1) Project purpose
+- GreenMarket: a community marketplace for UMC (UMN Crookston) to list and exchange donated items.
+- Stack: Node.js + Express + Sequelize (MySQL) backend, React + Vite frontend, JWT auth, bcrypt password hashing.
+
+2) What has been implemented (backend)
+- Express server with middleware: helmet, CORS, rate limiting, body parsers.
+- dotenv configured (loaded before DB config) and .env file in backend for local dev.
+- Sequelize configured and connects to local MySQL (MySQL 8). Database `greenmarket` created.
+- Models: `User` and `Item` with associations (User.hasMany(Item), Item.belongsTo(User)).
+- Authentication: register/login endpoints with bcrypt password hashing and JWT tokens.
+- Email domain validation: registration limited to @crk.umn.edu addresses.
+- Role support: student, faculty, staff, admin.
+- Index/column naming issues fixed (snake_case vs camelCase) and Sequelize sync run to create tables.
+- CORS configured to allow local dev (http://localhost:5173) and production Vercel URL.
+- Basic security measures present: helmet, rate-limiter, input validation (express-validator).
+
+3) What has been implemented (frontend & repo)
+- React frontend (Vite) with pages: Home, Register, Login, Dashboard, AddItem, etc.
+- AuthContext (renamed to .jsx) and frontend API wiring via axios.
+- Vite prod build tested locally; Vercel deployment triggered (fixes applied to pass build).
+- Commits pushed to GitHub.
+
+4) Current runtime state
+- Frontend dev server: http://localhost:5173 (when running)
+- Backend dev server: http://localhost:5000 (when running)
+- Local MySQL server (MySQL80) running and `greenmarket` DB present
+- No automated tests exist yet; some manual test scripts were created but not fully wired to CI.
+
+5) Remaining backend work (recommended, prioritized)
+High priority:
+- Add automated tests (Jest + supertest) for registration, login, and items endpoints.
+- Replace Sequelize sync() with proper migrations (sequelize-cli or umzug) and add seed data.
+- Deploy backend to a hosting provider (Railway/Render/Heroku) and configure production DB and env secrets.
+- Remove sensitive values from repo `.env` and use host-managed secrets for production.
+
+Medium priority:
+- Implement refresh tokens, email verification, and password reset flows.
+- Harden security: account lockout, stronger password policy, CSP review, deeper input sanitization.
+- Add structured logging (winston/pino) and error reporting (Sentry).
+
+Lower priority / enhancements:
+- Image/file upload support (S3/Cloudinary) for item images.
+- Pagination, search, filtering, and UX polishing in frontend.
+- Admin dashboard and role-based UI features.
+- E2E tests (Cypress) and load/performance testing.
+
+6) Operational recommendations
+- Create GitHub Actions to run lint/tests/build on PRs.
+- Add migration-run step to deployment to apply DB migrations.
+- Use a dedicated DB user (not root) with least-privilege for production DB.
+- Set up DB backups and monitoring, add metrics and alerting for production.
+
+7) Quick local commands
+- Start backend:
+  cd greenmarket-backend
+  npm start
+
+- Start frontend:
+  cd greenmarket-frontend
+  npm run dev
+
+- Build frontend for production:
+  cd greenmarket-frontend
+  npm run build
+
+- MySQL CLI (local):
+  "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+
+8) Next steps I can implement for you
+- Scaffold Jest + supertest and add basic integration tests (register/login).
+- Add sequelize-cli and create initial migrations + seeders.
+- Create a GitHub Actions CI workflow to run lint/tests/build on push/PR.
+- Prepare a deployment guide and env var list for hosting the backend (Render/Railway).
+
+If you want one of those done now, tell me which (tests / migrations / CI / deployment) and I will start it and update the todo list accordingly.
