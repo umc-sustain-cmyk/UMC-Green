@@ -1,0 +1,72 @@
+name: CI and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tests:
+    name: Run tests (backend + frontend build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Backend - install & test
+        working-directory: greenmarket-backend
+        run: |
+          npm ci
+          npm test
+
+      - name: Frontend - build (validate build)
+        working-directory: greenmarket-frontend
+        run: |
+          npm ci
+          npm run build
+
+  deploy-backend:
+    name: Deploy backend to Railway
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Login to Railway
+        env:
+          RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
+        run: |
+          if [ -z "$RAILWAY_API_KEY" ]; then echo "RAILWAY_API_KEY not set"; exit 1; fi
+          npx railway login --apiKey "$RAILWAY_API_KEY"
+
+      - name: Deploy to Railway (backend service)
+        env:
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_SERVICE_NAME: backend
+        run: |
+          if [ -z "$RAILWAY_PROJECT_ID" ]; then echo "RAILWAY_PROJECT_ID not set"; exit 1; fi
+          # Deploy the backend service using Railway CLI; start.sh will run migrations and start the app
+          npx railway up --project "$RAILWAY_PROJECT_ID" --service "$RAILWAY_SERVICE_NAME" --yes || true
+
+      - name: Optional: Deploy frontend to Vercel (if tokens present)
+        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_PROJECT_ID != '' && secrets.VERCEL_ORG_ID != '' }}
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          working-directory: ./greenmarket-frontend
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
