@@ -1,0 +1,25 @@
+{
+  "project": {
+    "name": "umc-green"
+  },
+  "services": [
+    {
+      "name": "backend",
+      "path": "greenmarket-backend",
+      "start": "bash start.sh",
+      "build": "npm ci",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+  "plugins": [
+    {
+      "name": "mysql",
+      "service": "backend",
+      "options": {
+        "database": "greenmarket"
+      }
+    }
+  ]
+}
