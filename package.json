@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cd greenmarket-backend && node server.js"
+    "start": "cd greenmarket-backend && bash start.sh"
   },
   "engines": {
     "node": "18.x"
