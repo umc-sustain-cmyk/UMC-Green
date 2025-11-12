@@ -1,0 +1,11 @@
+{
+  "name": "umc-green-monorepo-root",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd greenmarket-backend && node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
