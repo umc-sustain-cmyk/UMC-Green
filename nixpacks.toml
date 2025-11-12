@@ -1,0 +1,16 @@
+## Top-level Nixpacks configuration to build the backend in `greenmarket-backend`.
+## This ensures Railway / Nixpacks will build the backend using Node 18 and
+## run the proper install/migrate/start commands from inside the backend folder.
+
+[phases.setup]
+packages = ["nodejs-18_x"]
+
+[phases.build]
+# run build/install from the backend directory
+command = "cd greenmarket-backend && npm ci"
+
+[phases.deploy]
+command = "cd greenmarket-backend && ./start.sh"
+
+[env]
+NODE_ENV = "production"
