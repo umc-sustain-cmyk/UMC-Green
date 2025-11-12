@@ -1,8 +1,4 @@
-# Nixpacks configuration (example) for building the backend with Node.js 18
-#
-# Place this file at the project root of the backend so Nixpacks (or platforms
-# that support it) can pick up runtime and commands. Adjust versions/commands
-# as needed.
+
 
 [phases.setup]
 # Use Node.js 18 package from nixpkgs

@@ -6,8 +6,8 @@
     {
       "name": "backend",
       "path": "greenmarket-backend",
-      "start": "bash start.sh",
-      "build": "npm ci",
+      "start": "cd greenmarket-backend && node server.js",
+      "build": "cd greenmarket-backend && npm ci",
       "env": {
         "NODE_ENV": "production"
       }
