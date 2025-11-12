@@ -1,4 +1,31 @@
 {
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "nixpacksConfigPath": "nixpacks.toml"
+  },
+  "services": [
+    {
+      "name": "backend",
+      "path": "greenmarket-backend",
+      "start": "cd greenmarket-backend && ./start.sh",
+      "build": "cd greenmarket-backend && npm ci",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+  "plugins": [
+    {
+      "name": "mysql",
+      "service": "backend",
+      "options": {
+        "database": "greenmarket"
+      }
+    }
+  ]
+}
+{
   "project": {
     "name": "umc-green"
   },
