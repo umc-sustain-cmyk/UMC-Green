@@ -10,7 +10,10 @@ packages = ["nodejs-18_x"]
 command = "cd greenmarket-backend && npm ci"
 
 [phases.deploy]
-command = "cd greenmarket-backend && ./start.sh"
+# Ensure dependencies are present in the backend folder at deploy/start time.
+# Some build flows copy files after the install step; to be robust we run install
+# inside the backend right before starting. This installs production deps only.
+command = "cd greenmarket-backend && npm ci --omit=dev && ./start.sh"
 
 [env]
 NODE_ENV = "production"
