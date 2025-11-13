@@ -15,6 +15,14 @@ echo "Listing /app/greenmarket-backend/node_modules (if exists):"
 ls -la /app/greenmarket-backend/node_modules || ls -la ./node_modules || echo "no node_modules directory found"
 echo "Checking for dotenv via node require.resolve..."
 node -e "try{console.log('dotenv resolved at', require.resolve('dotenv'))}catch(e){console.error('dotenv NOT found:', e.message); process.exit(0)}"
+# Runtime fallback: install production deps if node_modules missing.
+echo "[start.sh] Ensuring dependencies are installed (runtime fallback)"
+if [ ! -d "node_modules" ]; then
+  echo "[start.sh] node_modules missing — running 'npm ci --omit=dev' (this may take a moment)"
+  npm ci --omit=dev || echo "[start.sh] npm ci failed; continuing to migrations (may still fail when starting)"
+else
+  echo "[start.sh] node_modules already present — skipping runtime install"
+fi
 
 echo "[start.sh] Running migrations (if any)..."
 # Run migrations and seeders if npx is available; don't fail the start if they error.
