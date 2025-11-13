@@ -10,7 +10,7 @@ set -euo pipefail
 echo "[start.sh] Preflight debug: Node/npm versions and module checks"
 node -v || echo "node not found"
 npm -v || echo "npm not found"
-echo "NODE_PATH=$NODE_PATH"
+echo "NODE_PATH=${NODE_PATH:-<not-set>}"
 echo "Listing /app/greenmarket-backend/node_modules (if exists):"
 ls -la /app/greenmarket-backend/node_modules || ls -la ./node_modules || echo "no node_modules directory found"
 echo "Checking for dotenv via node require.resolve..."
