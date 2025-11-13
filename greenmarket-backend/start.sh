@@ -24,6 +24,24 @@ else
   echo "[start.sh] node_modules already present — skipping runtime install"
 fi
 
+# Wait for database to be available (use DB_HOST/DB_PORT or MYSQL_HOST/MYSQL_PORT), retry a few times.
+DB_HOST=${DB_HOST:-${MYSQL_HOST:-127.0.0.1}}
+DB_PORT=${DB_PORT:-${MYSQL_PORT:-3306}}
+MAX_RETRIES=${DB_WAIT_RETRIES:-30}
+RETRY_DELAY=${DB_WAIT_DELAY:-2}
+
+echo "[start.sh] Waiting for database at $DB_HOST:$DB_PORT (up to $MAX_RETRIES attempts)..."
+attempt=0
+until node -e "const net=require('net'); const s=net.createConnection({host: '$DB_HOST', port: $DB_PORT}); s.on('connect', ()=>{console.log('db:open'); s.end(); process.exit(0)}); s.on('error', ()=>process.exit(1));"; do
+  attempt=$((attempt+1))
+  if [ "$attempt" -ge "$MAX_RETRIES" ]; then
+    echo "[start.sh] Database still unavailable after $attempt attempts; continuing (migrations may fail)."
+    break
+  fi
+  echo "[start.sh] Database not ready yet — attempt $attempt/$MAX_RETRIES. Sleeping $RETRY_DELAY s..."
+  sleep $RETRY_DELAY
+done
+
 echo "[start.sh] Running migrations (if any)..."
 # Run migrations and seeders if npx is available; don't fail the start if they error.
 if command -v npx >/dev/null 2>&1; then
