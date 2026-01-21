@@ -73,8 +73,9 @@ function About() {
               About GreenMarket
             </h1>
             <p style={{ fontSize: '1.3rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
-              We're on a mission to create a sustainable UMN Crookston campus by enabling 
-              students and faculty to share and donate items, reducing waste and building community.
+              GreenMarket is a campus donation platform where UMN Crookston students and faculty 
+              can post extra items they no longer need. Other community members can browse, reserve items, 
+              and contact donors to arrange pickup—reducing waste and building community connections.
             </p>
           </div>
         </div>
@@ -90,15 +91,15 @@ function About() {
                 <h2>Our Mission</h2>
               </div>
               <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '2rem' }}>
-                GreenMarket was founded in 2023 with a simple yet powerful vision: to create 
-                a marketplace where every purchase contributes to a more sustainable future. 
-                We connect eco-conscious consumers with local farmers, artisans, and businesses 
-                who share our commitment to environmental responsibility.
+                GreenMarket provides a simple, centralized platform for our campus community to 
+                reduce waste and help each other. Students and faculty can post items they no longer 
+                need as donations, and community members can browse available items, reserve what they 
+                need, and contact donors for convenient pickup arrangements.
               </p>
               <p style={{ fontSize: '1.1rem', lineHeight: '1.7', color: 'var(--text-light)' }}>
-                By choosing GreenMarket, you're not just buying products – you're joining a 
-                movement that prioritizes the planet, supports local communities, and proves 
-                that sustainable living can be both convenient and affordable.
+                By using GreenMarket, you're making a real environmental impact—extending the life of 
+                items that might otherwise end up in landfills, while strengthening connections within 
+                our UMN Crookston community. It's a win-win for people and the planet.
               </p>
             </div>
             <div style={{ textAlign: 'center', fontSize: '12rem' }}>
@@ -114,7 +115,7 @@ function About() {
           <div className="text-center mb-4">
             <h2>Our Core Values</h2>
             <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-              The principles that guide everything we do
+              How we create impact on campus
             </p>
           </div>
           
@@ -142,9 +143,9 @@ function About() {
       <section className="section">
         <div className="container">
           <div className="text-center mb-4">
-            <h2>Our Impact So Far</h2>
+            <h2>Our Community Impact</h2>
             <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-              Real numbers showing the difference we're making together
+              The difference we're making together at UMN Crookston
             </p>
           </div>
 
@@ -175,9 +176,9 @@ function About() {
       <section className="section" style={{ background: 'var(--bg-light)' }}>
         <div className="container">
           <div className="text-center mb-4">
-            <h2>Meet Our Team</h2>
+            <h2>Community Members</h2>
             <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-              The passionate people working to make sustainability mainstream
+              The students and faculty making GreenMarket work
             </p>
           </div>
 
@@ -229,8 +230,7 @@ function About() {
               </div>
               <h3>The Beginning</h3>
               <p style={{ color: 'var(--text-light)' }}>
-                Founded by environmental scientists and tech enthusiasts who saw the need 
-                for accessible sustainable commerce.
+                Founded to promote sustainability and community giving across campus through item reuse.
               </p>
             </div>
 
@@ -337,7 +337,7 @@ function About() {
               color: 'white',
               border: '2px solid white'
             }}>
-              Explore Products
+              Explore Donations
             </a>
           </div>
         </div>

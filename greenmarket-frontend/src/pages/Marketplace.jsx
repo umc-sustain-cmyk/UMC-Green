@@ -9,7 +9,7 @@ function Marketplace() {
   const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState({
     category: 'all',
-    priceRange: 'all',
+    condition: 'all',
     search: ''
   });
 
@@ -17,103 +17,92 @@ function Marketplace() {
   const mockItems = [
     {
       id: 1,
-      name: "Organic Textbook - Biology 101",
-      description: "Excellent condition, highlights throughout. Great for study prep.",
+      name: "Used Textbook - Biology 101",
+      description: "Excellent condition, minimal highlighting. Great for study prep.",
       price: 0.00,
       category: "books",
+      condition: "good",
       image_url: null,
       in_stock: true,
-      quantity: 1,
-      unit: "each",
       donor: {
         id: 1,
-        first_name: "John",
-        last_name: "Student"
+        first_name: "Sarah",
+        last_name: "Johnson"
       }
     },
     {
       id: 2,
-      name: "Whole Grain Bread",
-      description: "Artisan whole grain bread made with organic flour and natural ingredients",
-      price: 6.50,
-      category: "grains",
+      name: "Desk Lamp",
+      description: "LED desk lamp in good working condition. Perfect for studying.",
+      price: 0.00,
+      category: "home",
+      condition: "like-new",
       image_url: null,
       in_stock: true,
-      quantity: 20,
-      unit: "loaf",
-      is_organic: true,
-      seller: {
+      donor: {
         id: 2,
-        first_name: "Sarah",
-        last_name: "Baker"
+        first_name: "Mike",
+        last_name: "Chen"
       }
     },
     {
       id: 3,
-      name: "Free-Range Eggs",
-      description: "Fresh eggs from free-range chickens, perfect for breakfast or baking",
-      price: 8.99,
-      category: "dairy",
+      name: "Winter Jacket",
+      description: "Warm winter jacket, barely worn. Size Medium.",
+      price: 0.00,
+      category: "clothing",
+      condition: "like-new",
       image_url: null,
       in_stock: true,
-      quantity: 30,
-      unit: "dozen",
-      is_organic: false,
-      seller: {
+      donor: {
         id: 3,
-        first_name: "Mike",
-        last_name: "Poultry"
+        first_name: "Emma",
+        last_name: "Williams"
       }
     },
     {
       id: 4,
-      name: "Organic Spinach",
-      description: "Baby organic spinach leaves, perfect for salads and smoothies",
-      price: 3.99,
-      category: "produce",
+      name: "Computer Monitor",
+      description: "24-inch monitor, working perfectly. Great for online classes.",
+      price: 0.00,
+      category: "electronics",
+      condition: "good",
       image_url: null,
       in_stock: true,
-      quantity: 25,
-      unit: "bunch",
-      is_organic: true,
-      seller: {
-        id: 1,
+      donor: {
+        id: 4,
         first_name: "John",
-        last_name: "Farmer"
+        last_name: "Davis"
       }
     },
     {
       id: 5,
-      name: "Cold-Pressed Juice",
-      description: "Fresh cold-pressed green juice made with organic vegetables",
-      price: 7.99,
-      category: "beverages",
+      name: "Science Fiction Book Set",
+      description: "Set of 3 classic sci-fi novels in excellent condition.",
+      price: 0.00,
+      category: "books",
+      condition: "like-new",
       image_url: null,
-      in_stock: false,
-      quantity: 0,
-      unit: "bottle",
-      is_organic: true,
-      seller: {
-        id: 4,
-        first_name: "Emma",
-        last_name: "Juice Co"
+      in_stock: true,
+      donor: {
+        id: 5,
+        first_name: "Alex",
+        last_name: "Robinson"
       }
     },
     {
       id: 6,
-      name: "Grass-Fed Beef",
-      description: "Premium grass-fed beef from local farms, antibiotic-free",
-      price: 15.99,
-      category: "meat",
+      name: "Skateboard",
+      description: "Lightly used skateboard, all components working great.",
+      price: 0.00,
+      category: "sports",
+      condition: "good",
       image_url: null,
       in_stock: true,
-      quantity: 10,
-      unit: "lb",
-      is_organic: false,
-      seller: {
-        id: 5,
-        first_name: "Robert",
-        last_name: "Ranch"
+      donor: {
+        id: 6,
+        first_name: "Jordan",
+        last_name: "Martinez"
       }
     }
   ];
@@ -139,24 +128,9 @@ function Marketplace() {
       filtered = filtered.filter(item => item.category === filters.category);
     }
 
-    // Organic filter
-    if (filters.organic) {
-      filtered = filtered.filter(item => item.is_organic);
-    }
-
-    // Price range filter
-    if (filters.priceRange !== 'all') {
-      switch (filters.priceRange) {
-        case 'under5':
-          filtered = filtered.filter(item => item.price < 5);
-          break;
-        case '5to10':
-          filtered = filtered.filter(item => item.price >= 5 && item.price <= 10);
-          break;
-        case 'over10':
-          filtered = filtered.filter(item => item.price > 10);
-          break;
-      }
+    // Condition filter
+    if (filters.condition !== 'all') {
+      filtered = filtered.filter(item => item.condition === filters.condition);
     }
 
     // Search filter
@@ -178,9 +152,9 @@ function Marketplace() {
   };
 
   const handleAddToCart = (item) => {
-    console.log('Adding to cart:', item);
-    // TODO: Implement cart functionality
-    alert(`${item.name} added to cart!`);
+    console.log('Item reserved:', item);
+    // TODO: Implement reservation functionality
+    alert(`${item.name} has been reserved! Contact the donor to arrange pickup.`);
   };
 
   const handleToggleFavorite = (itemId) => {
@@ -202,9 +176,9 @@ function Marketplace() {
     <div className="container section">
       {/* Header */}
       <div className="text-center mb-4">
-        <h1>Sustainable Marketplace</h1>
+        <h1>Donation Board</h1>
         <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-          Discover eco-friendly products from local sellers
+          Browse items donated by students and faculty
         </p>
       </div>
 
@@ -213,7 +187,7 @@ function Marketplace() {
         <div className="grid grid-2" style={{ alignItems: 'end' }}>
           {/* Search */}
           <div>
-            <label className="form-label">Search Products</label>
+            <label className="form-label">Search Items</label>
             <div style={{ position: 'relative' }}>
               <Search 
                 size={20} 
@@ -228,7 +202,7 @@ function Marketplace() {
               <input
                 type="text"
                 className="form-input"
-                placeholder="Search for products..."
+                placeholder="Search for items..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
                 style={{ paddingLeft: '40px' }}
@@ -264,62 +238,65 @@ function Marketplace() {
               onChange={(e) => handleFilterChange('category', e.target.value)}
             >
               <option value="all">All Categories</option>
-              <option value="produce">Produce</option>
-              <option value="dairy">Dairy</option>
-              <option value="meat">Meat</option>
-              <option value="grains">Grains</option>
-              <option value="beverages">Beverages</option>
+              <option value="books">Books & Textbooks</option>
+              <option value="electronics">Electronics</option>
+              <option value="clothing">Clothing & Shoes</option>
+              <option value="furniture">Furniture</option>
+              <option value="sports">Sports & Outdoors</option>
+              <option value="home">Home & Kitchen</option>
               <option value="other">Other</option>
             </select>
           </div>
 
-          {/* Price Range Filter */}
+          {/* Condition Filter */}
           <div>
-            <label className="form-label">Price Range</label>
+            <label className="form-label">Condition</label>
             <select
               className="form-select"
-              value={filters.priceRange}
-              onChange={(e) => handleFilterChange('priceRange', e.target.value)}
+              value={filters.condition}
+              onChange={(e) => handleFilterChange('condition', e.target.value)}
             >
-              <option value="all">All Prices</option>
-              <option value="under5">Under $5</option>
-              <option value="5to10">$5 - $10</option>
-              <option value="over10">Over $10</option>
+              <option value="all">All Conditions</option>
+              <option value="new">New</option>
+              <option value="like-new">Like New</option>
+              <option value="good">Good</option>
+              <option value="fair">Fair</option>
+              <option value="poor">Poor</option>
             </select>
           </div>
 
-          {/* Organic Filter */}
+          {/* Donor Name Filter */}
           <div>
-            <label className="form-label">Organic Only</label>
-            <div className="flex gap-2" style={{ alignItems: 'center', paddingTop: '0.75rem' }}>
-              <input
-                type="checkbox"
-                checked={filters.organic}
-                onChange={(e) => handleFilterChange('organic', e.target.checked)}
-                style={{ marginRight: '0.5rem' }}
-              />
-              <span>Organic Products</span>
-            </div>
+            <label className="form-label">Sort By</label>
+            <select
+              className="form-select"
+              value={filters.sortBy || 'newest'}
+              onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="name">Item Name (A-Z)</option>
+            </select>
           </div>
 
           {/* Results Count */}
           <div>
             <label className="form-label">Results</label>
             <div style={{ paddingTop: '0.75rem', color: 'var(--text-light)' }}>
-              {filteredItems.length} product{filteredItems.length !== 1 ? 's' : ''} found
+              {filteredItems.length} item{filteredItems.length !== 1 ? 's' : ''} available
             </div>
           </div>
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Items Grid */}
       {filteredItems.length > 0 ? (
         <div className={viewMode === 'grid' ? 'grid grid-3' : 'flex-column gap-3'}>
           {filteredItems.map(item => (
             <ItemCard
               key={item.id}
               item={item}
-              onAddToCart={handleAddToCart}
+              onReserveItem={handleAddToCart}
               onToggleFavorite={handleToggleFavorite}
             />
           ))}
@@ -327,7 +304,7 @@ function Marketplace() {
       ) : (
         <div className="text-center p-4">
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
-          <h3>No products found</h3>
+          <h3>No items found</h3>
           <p style={{ color: 'var(--text-light)' }}>
             Try adjusting your filters or search terms
           </p>

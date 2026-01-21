@@ -65,19 +65,16 @@ function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-4 mb-4">
-        <>
-          <div className="card text-center">
-            <Package size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsDonated}</h3>
-              <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Donated</p>
-            </div>
-            <div className="card text-center">
-              <BarChart3 size={32} color="var(--accent-green)" style={{ margin: '0 auto 1rem' }} />
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsReceived}</h3>
-              <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Received</p>
-            </div>
-          </>
-        ) : null}
+        <div className="card text-center">
+          <Package size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsDonated}</h3>
+          <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Donated</p>
+        </div>
+        <div className="card text-center">
+          <BarChart3 size={32} color="var(--accent-green)" style={{ margin: '0 auto 1rem' }} />
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsReceived}</h3>
+          <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Received</p>
+        </div>
         
         <div className="card text-center">
           <ShoppingCart size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />

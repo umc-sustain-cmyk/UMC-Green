@@ -108,8 +108,8 @@ The frontend is designed to work with the GreenMarket Node.js backend API. Key e
 
 - `POST /api/auth/login` - User authentication
 - `POST /api/auth/register` - User registration
-- `GET /api/items` - Fetch products
-- `POST /api/items` - Create new product
+- `GET /api/items` - Fetch donation items
+- `POST /api/items` - Create new donation
 - `GET /api/user/profile` - Get user profile
 
 ## 📱 Responsive Design
@@ -125,43 +125,41 @@ The application is fully responsive and optimized for:
 - Secure login/registration
 - JWT token management
 - Protected routes
-- User role management (buyer/seller)
+- User role management (donor/recipient)
 - **Auto-prompt Authentication**: Pop-up appears after 5 seconds with countdown notification
 
-### Product Management
-- Product listing with images
+### Item Donation Management
+- Donation item listing with images
 - Category filtering
-- Price range filtering
 - Search functionality
-- Organic product badges
+- Condition rating (new, like-new, good, fair, poor)
 
 ### User Dashboard
-- Personal statistics
+- Personal donation statistics
 - Recent activity tracking
 - Quick action buttons
-- Environmental impact metrics
+- Community impact metrics
 
-### Seller Features
-- Add new products
-- Inventory management
-- Sales tracking
-- Earnings overview
+### Donation Features
+- Post donated items
+- Item management
+- Browse available donations
+- Reserve items
 
-## 🌍 Environmental Focus
+## 🌍 Sustainability Focus
 
-The design emphasizes sustainability through:
+The design emphasizes community and waste reduction through:
 - Green color scheme
-- Eco-friendly messaging
-- Carbon footprint tracking
-- Local business promotion
-- Organic product highlighting
+- Donation-focused messaging
+- Community impact tracking
+- Campus-based sharing
+- Item reuse highlighting
 
 ## 🔮 Future Enhancements
 
-- Shopping cart functionality
-- Payment integration
-- Real-time messaging
-- Advanced analytics
+- In-app messaging between donors and recipients
+- Real-time notifications for reservations
+- Advanced analytics dashboard
 - Mobile app version
 - PWA capabilities
 

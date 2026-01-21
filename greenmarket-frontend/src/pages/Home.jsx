@@ -201,7 +201,7 @@ function Home() {
               </div>
               <h3>Browse & Discover</h3>
               <p style={{ color: 'var(--text-light)' }}>
-                Explore our curated collection of sustainable products from local sellers
+                Explore campus donations from students and faculty
               </p>
             </div>
 
@@ -223,7 +223,7 @@ function Home() {
               </div>
               <h3>Shop with Purpose</h3>
               <p style={{ color: 'var(--text-light)' }}>
-                Every purchase supports environmental sustainability and local communities
+                Give items a second life and reduce campus waste sustainably
               </p>
             </div>
 

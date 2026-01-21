@@ -14,6 +14,7 @@ function AddItem() {
     description: '',
     price: '0.00',
     category: 'books',
+    condition: 'good',
     quantity: 1,
     unit: 'each',
     image: null
@@ -36,19 +37,19 @@ function AddItem() {
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setError('Product name is required');
+      setError('Item name is required');
       return false;
     }
     if (!formData.description.trim()) {
-      setError('Product description is required');
+      setError('Item description is required');
       return false;
     }
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      setError('Please enter a valid price');
+    if (!formData.category) {
+      setError('Category is required');
       return false;
     }
-    if (!formData.quantity || parseInt(formData.quantity) <= 0) {
-      setError('Please enter a valid quantity');
+    if (!formData.condition) {
+      setError('Item condition is required');
       return false;
     }
     return true;
@@ -69,20 +70,20 @@ function AddItem() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Mock successful product creation
-      console.log('Product created:', formData);
+      // Mock successful item creation
+      console.log('Item donated:', formData);
       
-      setSuccess('Product added successfully!');
+      setSuccess('Item donated successfully!');
       
       // Reset form
       setFormData({
         name: '',
         description: '',
-        price: '',
-        category: 'produce',
+        price: '0',
+        category: 'books',
+        condition: 'good',
         quantity: 1,
         unit: 'piece',
-        isOrganic: false,
         image: null
       });
 
@@ -92,7 +93,7 @@ function AddItem() {
       }, 2000);
       
     } catch (err) {
-      setError('Failed to add product. Please try again.');
+      setError('Failed to donate item. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -123,7 +124,7 @@ function AddItem() {
           )}
 
           <form onSubmit={handleSubmit}>
-            {/* Product Name */}
+            {/* Item Name */}
             <div className="form-group">
               <label className="form-label">Item Name *</label>
               <input
@@ -137,7 +138,7 @@ function AddItem() {
               />
             </div>
 
-            {/* Product Description */}
+            {/* Item Description */}
             <div className="form-group">
               <label className="form-label">Description *</label>
               <textarea
@@ -265,7 +266,7 @@ function AddItem() {
 
             {/* Product Image */}
             <div className="form-group">
-              <label className="form-label">Product Image</label>
+              <label className="form-label">Item Image</label>
               <div style={{
                 border: '2px dashed var(--border-light)',
                 borderRadius: '8px',
@@ -275,7 +276,7 @@ function AddItem() {
               }}>
                 <Upload size={32} color="var(--text-light)" style={{ margin: '0 auto 1rem' }} />
                 <p style={{ color: 'var(--text-light)', margin: '0 0 1rem 0' }}>
-                  Click to upload or drag and drop your product image
+                  Click to upload or drag and drop your item image
                 </p>
                 <input
                   type="file"
@@ -300,22 +301,23 @@ function AddItem() {
               </div>
             </div>
 
-            {/* Organic Checkbox */}
+            {/* Item Condition */}
             <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <input
-                  type="checkbox"
-                  name="isOrganic"
-                  checked={formData.isOrganic}
-                  onChange={handleChange}
-                />
-                <span style={{ fontWeight: '500' }}>
-                  This is an organic product
-                </span>
-              </label>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
-                Check this box if your product is certified organic or grown without synthetic pesticides
-              </p>
+              <label className="form-label">Item Condition *</label>
+              <select
+                name="condition"
+                className="form-select"
+                value={formData.condition || ''}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select condition...</option>
+                <option value="new">New - Never used</option>
+                <option value="like-new">Like New - Barely used</option>
+                <option value="good">Good - Normal wear and tear</option>
+                <option value="fair">Fair - Notable wear</option>
+                <option value="poor">Poor - Significant damage</option>
+              </select>
             </div>
 
             {/* Submit Button */}
@@ -335,12 +337,12 @@ function AddItem() {
                 {loading ? (
                   <>
                     <div className="loading"></div>
-                    Adding Product...
+                    Donating Item...
                   </>
                 ) : (
                   <>
                     <Package size={18} />
-                    Add Product
+                    Donate Item
                   </>
                 )}
               </button>
@@ -360,10 +362,10 @@ function AddItem() {
             </h4>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: 'var(--text-light)' }}>
               <li>Use clear, high-quality images</li>
-              <li>Write detailed descriptions highlighting sustainability benefits</li>
-              <li>Set competitive prices for your local market</li>
-              <li>Clearly state if products are organic or eco-certified</li>
-              <li>Keep your inventory updated regularly</li>
+              <li>Write detailed descriptions about the item's condition and features</li>
+              <li>Accurately describe the item's condition</li>
+              <li>Be honest about any defects or damage</li>
+              <li>Include pickup/delivery details if possible</li>
             </ul>
           </div>
         </div>

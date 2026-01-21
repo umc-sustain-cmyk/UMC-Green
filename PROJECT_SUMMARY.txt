@@ -5,14 +5,14 @@ Date: 2025-11-11
 Location: UMC-Green repository (root)
 
 1) Project purpose
-- GreenMarket: a community marketplace for UMC (UMN Crookston) to list and exchange donated items.
+- GreenMarket: a campus donation and item-sharing platform for UMN Crookston where students and faculty can donate items they don't need, and other community members can reserve and receive them.
 - Stack: Node.js + Express + Sequelize (MySQL) backend, React + Vite frontend, JWT auth, bcrypt password hashing.
 
 2) What has been implemented (backend)
 - Express server with middleware: helmet, CORS, rate limiting, body parsers.
 - dotenv configured (loaded before DB config) and .env file in backend for local dev.
 - Sequelize configured and connects to local MySQL (MySQL 8). Database `greenmarket` created.
-- Models: `User` and `Item` with associations (User.hasMany(Item), Item.belongsTo(User)).
+- Models: `User` and `Item` with associations (User.hasMany(Item), Item.belongsTo(User as 'donations')).
 - Authentication: register/login endpoints with bcrypt password hashing and JWT tokens.
 - Email domain validation: registration limited to @crk.umn.edu addresses.
 - Role support: student, faculty, staff, admin.

@@ -109,7 +109,7 @@ function Register() {
           <div className="text-center mb-4">
             <h2>Join GreenMarket</h2>
             <p style={{ color: 'var(--text-light)' }}>
-              Create your account and start your sustainable journey
+              Create your account and start donating or receiving campus items
             </p>
           </div>
 
@@ -224,8 +224,7 @@ function Register() {
                 value={formData.role}
                 onChange={handleChange}
               >
-                <option value="user">Buyer - I want to purchase sustainable products</option>
-                <option value="seller">Seller - I want to sell eco-friendly products</option>
+                <option value="user">Student/Faculty - Donate or receive items</option>
               </select>
             </div>
 

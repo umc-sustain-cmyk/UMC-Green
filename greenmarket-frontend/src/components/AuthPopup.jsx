@@ -160,7 +160,7 @@ function AuthPopup({ isOpen, onClose }) {
 
         <p style={{ color: 'var(--text-light)', marginBottom: '2rem' }}>
           {isLoginMode 
-            ? 'Sign in with your UMN Crookston email to access the marketplace' 
+            ? 'Sign in with your UMN Crookston email to access the donation board' 
             : 'Create your account using your UMN Crookston email address'
           }
         </p>
@@ -195,7 +195,6 @@ function AuthPopup({ isOpen, onClose }) {
                   value={loginData.email}
                   onChange={handleLoginChange}
                   style={{ paddingLeft: '40px' }}
-                  pattern="[a-zA-Z0-9._%+-]+@crk\.umn\.edu"
                   title="Please use your UMN Crookston email (@crk.umn.edu)"
                   required
                 />
@@ -325,7 +324,6 @@ function AuthPopup({ isOpen, onClose }) {
                   value={registerData.email}
                   onChange={handleRegisterChange}
                   style={{ paddingLeft: '40px' }}
-                  pattern="[a-zA-Z0-9._%+-]+@crk\.umn\.edu"
                   title="Please use your UMN Crookston email (@crk.umn.edu)"
                   required
                 />
@@ -340,8 +338,7 @@ function AuthPopup({ isOpen, onClose }) {
                 value={registerData.role}
                 onChange={handleRegisterChange}
               >
-                <option value="user">Buyer - I want to purchase sustainable products</option>
-                <option value="seller">Seller - I want to sell eco-friendly products</option>
+                <option value="user">Student/Faculty - Donate or receive items</option>
               </select>
             </div>
 

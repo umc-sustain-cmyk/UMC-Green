@@ -29,7 +29,6 @@ router.post('/register', [
     .withMessage('Last name is required and must be less than 50 characters'),
   body('email')
     .isEmail()
-    .normalizeEmail()
     .withMessage('Please enter a valid email')
     .custom((value) => {
       const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/;

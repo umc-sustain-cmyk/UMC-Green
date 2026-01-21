@@ -1,16 +1,16 @@
 import React from 'react';
-import { ShoppingCart, Heart, User } from 'lucide-react';
+import { Heart, User, Bookmark } from 'lucide-react';
 
-function ItemCard({ item, onAddToCart, onToggleFavorite }) {
-  const handleAddToCart = () => {
-    if (onAddToCart) {
-      onAddToCart(item);
-    }
-  };
-
+function ItemCard({ item, onToggleFavorite, onReserveItem }) {
   const handleToggleFavorite = () => {
     if (onToggleFavorite) {
       onToggleFavorite(item.id);
+    }
+  };
+
+  const handleReserveItem = () => {
+    if (onReserveItem) {
+      onReserveItem(item);
     }
   };
 
@@ -30,18 +30,19 @@ function ItemCard({ item, onAddToCart, onToggleFavorite }) {
       }}>
         {!item.image_url && (
           <div className="flex-center" style={{ height: '100%', color: 'white', fontSize: '3rem' }}>
-            🌱
+            �
           </div>
         )}
         
-        {/* Organic Badge */}
-        {item.is_organic && (
+        {/* Condition Badge */}
+        {item.condition && (
           <div className="badge badge-success" style={{
             position: 'absolute',
             top: '0.5rem',
-            left: '0.5rem'
+            left: '0.5rem',
+            textTransform: 'capitalize'
           }}>
-            Organic
+            {item.condition}
           </div>
         )}
 
@@ -94,39 +95,36 @@ function ItemCard({ item, onAddToCart, onToggleFavorite }) {
         <div className="flex-between" style={{ marginBottom: '1rem' }}>
           <div>
             <span style={{ 
-              fontSize: '1.25rem', 
+              fontSize: '1.1rem', 
               fontWeight: 'bold', 
               color: 'var(--primary-green)' 
             }}>
-              ${item.price}
-            </span>
-            <span style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>
-              /{item.unit}
+              {item.price > 0 ? `$${item.price}` : 'FREE'}
             </span>
           </div>
           <div style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>
-            Qty: {item.quantity}
+            {item.condition}
           </div>
         </div>
 
-        {/* Seller Info */}
-        {item.seller && (
+        {/* Donor Info */}
+        {item.donor && (
           <div className="flex gap-2 mb-3" style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>
             <User size={16} />
-            <span>Sold by {item.seller.first_name} {item.seller.last_name}</span>
+            <span>From {item.donor.first_name} {item.donor.last_name}</span>
           </div>
         )}
 
         {/* Actions */}
         <div className="flex gap-2">
           <button 
-            onClick={handleAddToCart}
+            onClick={handleReserveItem}
             className="btn btn-primary"
             style={{ flex: 1 }}
             disabled={!item.in_stock}
           >
-            <ShoppingCart size={16} />
-            {item.in_stock ? 'Add to Cart' : 'Out of Stock'}
+            <Bookmark size={16} />
+            {item.in_stock ? 'Reserve Item' : 'Not Available'}
           </button>
         </div>
 
@@ -141,7 +139,7 @@ function ItemCard({ item, onAddToCart, onToggleFavorite }) {
             fontSize: '0.9rem',
             textAlign: 'center'
           }}>
-            Currently out of stock
+            This item is no longer available
           </div>
         )}
       </div>

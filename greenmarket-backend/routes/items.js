@@ -77,7 +77,7 @@ router.get('/', [
       where,
       include: [{
         model: User,
-        as: 'seller',
+        as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role']
       }],
       limit: parseInt(limit),
@@ -119,7 +119,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
     const item = await Item.findByPk(req.params.id, {
       include: [{
         model: User,
-        as: 'seller',
+        as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'phone']
       }]
     });
@@ -222,11 +222,11 @@ router.post('/', [
       userId: req.user.id
     });
 
-    // Fetch the item with seller info
-    const itemWithSeller = await Item.findByPk(item.id, {
+    // Fetch the item with donor info
+    const itemWithDonor = await Item.findByPk(item.id, {
       include: [{
         model: User,
-        as: 'seller',
+        as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role']
       }]
     });
@@ -235,7 +235,7 @@ router.post('/', [
       success: true,
       message: 'Item created successfully',
       data: {
-        item: itemWithSeller
+        item: itemWithDonor
       }
     });
 
@@ -339,11 +339,11 @@ router.put('/:id', [
 
     await item.update(updatedFields);
 
-    // Fetch updated item with seller info
+    // Fetch updated item with donor info
     const updatedItem = await Item.findByPk(item.id, {
       include: [{
         model: User,
-        as: 'seller',
+        as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role']
       }]
     });
@@ -433,7 +433,7 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
       where,
       include: [{
         model: User,
-        as: 'seller',
+        as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role']
       }],
       limit: parseInt(limit),

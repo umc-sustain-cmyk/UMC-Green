@@ -51,20 +51,20 @@ function Contact() {
     {
       icon: <Mail size={24} color="var(--primary-green)" />,
       title: 'Email Us',
-      content: 'hello@greenmarket.com',
+      content: 'greenmarket@crk.umn.edu',
       description: 'Send us an email anytime'
     },
     {
       icon: <Phone size={24} color="var(--primary-green)" />,
       title: 'Call Us',
-      content: '(555) 123-4567',
-      description: 'Mon-Fri, 9AM-6PM EST'
+      content: 'UMN Crookston Campus',
+      description: 'Visit us on campus'
     },
     {
       icon: <MapPin size={24} color="var(--primary-green)" />,
       title: 'Visit Us',
-      content: '123 Green Street, Eco City, EC 12345',
-      description: 'Our headquarters'
+      content: '2900 University Ave, Crookston, MN',
+      description: 'Our campus location'
     },
     {
       icon: <Clock size={24} color="var(--primary-green)" />,
@@ -76,20 +76,28 @@ function Contact() {
 
   const faqs = [
     {
-      question: 'How do I become a seller on GreenMarket?',
-      answer: 'Simply create an account and select "Seller" as your account type during registration. Once approved, you can start listing your sustainable products immediately.'
+      question: 'How do I donate an item on GreenMarket?',
+      answer: 'Create an account, log in, and click "Donate Item". Fill in the item details (name, description, category, condition), upload a photo if you have one, and post. Your donation is immediately visible to the campus community.'
     },
     {
-      question: 'What makes a product eligible for GreenMarket?',
-      answer: 'Products must meet our sustainability criteria: locally sourced, organic, minimal packaging, fair trade, or contribute to environmental conservation.'
+      question: 'How do I reserve an item I want?',
+      answer: 'Browse the Donations page, find an item you need, and click "Reserve". The donor will see your reservation and contact you to arrange a convenient pickup time and location.'
     },
     {
-      question: 'Do you offer customer support?',
-      answer: 'Yes! Our customer support team is available Monday-Friday, 9AM-6PM EST. You can reach us via email, phone, or through this contact form.'
+      question: 'How do I contact a donor to pick up an item?',
+      answer: 'Once an item is reserved for you, the donor will reach out using the contact information in your profile. You can also message them directly through the platform to coordinate pickup details.'
     },
     {
-      question: 'How do shipping and delivery work?',
-      answer: 'We partner with local delivery services and encourage sellers to offer local pickup options to minimize environmental impact.'
+      question: 'Can I post any item I want?',
+      answer: 'You can donate most items in good condition—textbooks, furniture, clothing, electronics, sports equipment, and more. Items should be usable and safe. Please be honest about the condition and any defects.'
+    },
+    {
+      question: 'Is there a charge to use GreenMarket?',
+      answer: 'No! GreenMarket is completely free. There are no fees for donating or receiving items. It\'s a service for our UMN Crookston community to reduce waste and support each other.'
+    },
+    {
+      question: 'What if I have a question about an item?',
+      answer: 'Contact the donor directly once you reserve the item. They\'ll answer any questions about the item\'s condition, specifications, or pickup arrangements.'
     }
   ];
 
@@ -107,8 +115,8 @@ function Contact() {
             Get in Touch
           </h1>
           <p style={{ fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
-            Have questions, feedback, or want to partner with us? 
-            We'd love to hear from you!
+            Have questions about donating or receiving items? Contact us anytime. 
+            We're here to help our campus community thrive!
           </p>
         </div>
       </section>
@@ -163,12 +171,12 @@ function Contact() {
                   value={formData.category}
                   onChange={handleChange}
                 >
-                  <option value="general">General Inquiry</option>
-                  <option value="seller">Becoming a Seller</option>
-                  <option value="support">Customer Support</option>
-                  <option value="partnership">Business Partnership</option>
-                  <option value="press">Press & Media</option>
-                  <option value="feedback">Feedback</option>
+                  <option value="general">General Question</option>
+                  <option value="donate">How to Donate Items</option>
+                  <option value="receive">How to Receive Items</option>
+                  <option value="support">Technical Support</option>
+                  <option value="issue">Report an Issue</option>
+                  <option value="feedback">Feedback & Suggestions</option>
                 </select>
               </div>
 
