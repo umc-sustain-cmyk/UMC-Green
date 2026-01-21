@@ -17,8 +17,8 @@ function Footer() {
               <h3 style={{ color: 'white', margin: 0 }}>GreenMarket</h3>
             </div>
             <p style={{ color: '#ccc', lineHeight: '1.6' }}>
-              Building a sustainable community marketplace where eco-friendly 
-              products and local businesses thrive together.
+              A campus donation and item-sharing platform connecting UMN Crookston 
+              students and faculty to reduce waste and build community.
             </p>
           </div>
 
@@ -30,7 +30,7 @@ function Footer() {
                 Home
               </a>
               <a href="/marketplace" style={{ color: '#ccc', textDecoration: 'none' }}>
-                Marketplace
+                Donations
               </a>
               <a href="/about" style={{ color: '#ccc', textDecoration: 'none' }}>
                 About Us
@@ -48,19 +48,19 @@ function Footer() {
               <div className="flex gap-2">
                 <Mail size={16} color="var(--accent-green)" />
                 <span style={{ color: '#ccc', fontSize: '0.9rem' }}>
-                  hello@greenmarket.com
+                  greenmarket@crk.umn.edu
                 </span>
               </div>
               <div className="flex gap-2">
                 <Phone size={16} color="var(--accent-green)" />
                 <span style={{ color: '#ccc', fontSize: '0.9rem' }}>
-                  (555) 123-4567
+                  UMN Crookston Campus
                 </span>
               </div>
               <div className="flex gap-2">
                 <MapPin size={16} color="var(--accent-green)" />
                 <span style={{ color: '#ccc', fontSize: '0.9rem' }}>
-                  Eco City, Green State 12345
+                  2900 University Ave, Crookston, MN
                 </span>
               </div>
             </div>
@@ -76,7 +76,7 @@ function Footer() {
         }}>
           <p style={{ color: '#ccc', fontSize: '0.9rem', margin: 0 }}>
             © {new Date().getFullYear()} GreenMarket. All rights reserved. 
-            Building a sustainable future together. 🌱
+            Building a sustainable campus community. 🌱
           </p>
         </div>
       </div>

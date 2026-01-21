@@ -2,7 +2,7 @@
   "name": "greenmarket-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "React frontend for GreenMarket sustainable community marketplace",
+  "description": "React frontend for GreenMarket - campus donation and item-sharing platform",
   "type": "module",
   "scripts": {
     "dev": "vite",

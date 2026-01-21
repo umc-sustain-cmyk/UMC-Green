@@ -13,34 +13,30 @@ function Dashboard() {
 
   // Mock user stats
   const userStats = {
-    itemsSold: user?.role === 'seller' ? 12 : 0,
-    totalEarnings: user?.role === 'seller' ? 247.50 : 0,
-    itemsPurchased: 8,
+    itemsDonated: 5,
+    itemsReceived: 8,
     sustainabilityPoints: 156,
     favoriteItems: 5,
-    orderHistory: 12
+    activityHistory: 12
   };
 
   const recentActivity = [
     {
       id: 1,
-      type: 'purchase',
-      description: 'Purchased Organic Tomatoes',
-      amount: 4.99,
+      type: 'received',
+      description: 'Received Textbook - Biology 101',
       date: '2025-10-06'
     },
     {
       id: 2,
-      type: 'sale',
-      description: 'Sold Whole Grain Bread',
-      amount: 6.50,
+      type: 'donated',
+      description: 'Donated Desk Chair',
       date: '2025-10-05'
     },
     {
       id: 3,
-      type: 'purchase',
-      description: 'Purchased Free-Range Eggs',
-      amount: 8.99,
+      type: 'received',
+      description: 'Received College Backpack',
       date: '2025-10-04'
     }
   ];
@@ -52,19 +48,14 @@ function Dashboard() {
         <div>
           <h1>Welcome back, {user?.firstName}! 👋</h1>
           <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-            {user?.role === 'seller' 
-              ? 'Manage your products and track your sales' 
-              : 'Continue your sustainable shopping journey'
-            }
+            Manage your donations and continue building our community
           </p>
         </div>
         <div className="flex gap-2">
-          {user?.role === 'seller' && (
-            <a href="/add-item" className="btn btn-primary">
-              <Plus size={18} />
-              Add Product
-            </a>
-          )}
+          <a href="/add-item" className="btn btn-primary">
+            <Plus size={18} />
+            Donate Item
+          </a>
           <button className="btn btn-secondary">
             <Settings size={18} />
             Settings
@@ -74,25 +65,24 @@ function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-4 mb-4">
-        {user?.role === 'seller' ? (
-          <>
-            <div className="card text-center">
-              <Package size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsSold}</h3>
-              <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Sold</p>
+        <>
+          <div className="card text-center">
+            <Package size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />
+              <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsDonated}</h3>
+              <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Donated</p>
             </div>
             <div className="card text-center">
               <BarChart3 size={32} color="var(--accent-green)" style={{ margin: '0 auto 1rem' }} />
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>${userStats.totalEarnings}</h3>
-              <p style={{ color: 'var(--text-light)', margin: 0 }}>Total Earnings</p>
+              <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsReceived}</h3>
+              <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Received</p>
             </div>
           </>
         ) : null}
         
         <div className="card text-center">
           <ShoppingCart size={32} color="var(--primary-green)" style={{ margin: '0 auto 1rem' }} />
-          <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.itemsPurchased}</h3>
-          <p style={{ color: 'var(--text-light)', margin: 0 }}>Items Purchased</p>
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>{userStats.activityHistory}</h3>
+          <p style={{ color: 'var(--text-light)', margin: 0 }}>Community Actions</p>
         </div>
         
         <div className="card text-center">
@@ -130,9 +120,9 @@ function Dashboard() {
                 </div>
                 <div style={{
                   fontWeight: 'bold',
-                  color: activity.type === 'purchase' ? 'var(--primary-green)' : 'var(--accent-green)'
+                  color: activity.type === 'received' ? 'var(--primary-green)' : 'var(--accent-green)'
                 }}>
-                  {activity.type === 'purchase' ? '-' : '+'}${activity.amount}
+                  {activity.type === 'received' ? '📦' : '🎁'}
                 </div>
               </div>
             ))}
@@ -148,21 +138,13 @@ function Dashboard() {
           <div className="flex-column gap-2">
             <a href="/marketplace" className="btn btn-secondary" style={{ width: '100%' }}>
               <ShoppingCart size={18} />
-              Browse Marketplace
+              Browse Donations
             </a>
             
-            {user?.role === 'seller' && (
-              <>
-                <a href="/add-item" className="btn btn-primary" style={{ width: '100%' }}>
-                  <Plus size={18} />
-                  Add New Product
-                </a>
-                <button className="btn btn-secondary" style={{ width: '100%' }}>
-                  <Package size={18} />
-                  Manage Inventory
-                </button>
-              </>
-            )}
+            <a href="/add-item" className="btn btn-primary" style={{ width: '100%' }}>
+              <Plus size={18} />
+              Donate New Item
+            </a>
             
             <button className="btn btn-secondary" style={{ width: '100%' }}>
               <User size={18} />
@@ -171,7 +153,7 @@ function Dashboard() {
             
             <button className="btn btn-secondary" style={{ width: '100%' }}>
               <BarChart3 size={18} />
-              View Analytics
+              View Impact
             </button>
           </div>
         </div>
@@ -194,9 +176,9 @@ function Dashboard() {
             </p>
           </div>
           <div>
-            <label className="form-label">Account Type</label>
+            <label className="form-label">Member Since</label>
             <div className="badge badge-info">
-              {user?.role === 'seller' ? 'Seller' : 'Buyer'}
+              Community Member
             </div>
           </div>
         </div>
@@ -207,19 +189,19 @@ function Dashboard() {
         background: 'linear-gradient(135deg, var(--light-green), var(--accent-green))',
         color: 'white'
       }}>
-        <h3 style={{ color: 'white', marginBottom: '1rem' }}>Your Environmental Impact 🌍</h3>
+        <h3 style={{ color: 'white', marginBottom: '1rem' }}>Your Community Impact 🌍</h3>
         <div className="grid grid-3">
           <div className="text-center">
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>15kg</div>
-            <p style={{ margin: 0, opacity: 0.9 }}>CO₂ Saved</p>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>5</div>
+            <p style={{ margin: 0, opacity: 0.9 }}>Items Donated</p>
           </div>
           <div className="text-center">
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>8</div>
-            <p style={{ margin: 0, opacity: 0.9 }}>Local Farmers Supported</p>
+            <p style={{ margin: 0, opacity: 0.9 }}>Items Received</p>
           </div>
           <div className="text-center">
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>95%</div>
-            <p style={{ margin: 0, opacity: 0.9 }}>Sustainable Purchases</p>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>13</div>
+            <p style={{ margin: 0, opacity: 0.9 }}>Waste Reduction Wins</p>
           </div>
         </div>
       </div>

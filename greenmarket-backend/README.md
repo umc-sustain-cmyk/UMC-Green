@@ -1,12 +1,12 @@
 # GreenMarket Backend API
 
-A Node.js/Express backend API for the UMC GreenMarket application with MySQL database integration.
+A Node.js/Express backend API for GreenMarket - an on-campus donation and item-sharing platform with MySQL database integration. This platform enables students and faculty to donate and share items within the UMN Crookston campus community.
 
 ## Features
 
 - **Authentication & Authorization**: JWT-based authentication with role-based access control
 - **User Management**: Registration, login, profile management with UMN Crookston email validation
-- **Item Management**: CRUD operations for marketplace items with search and filtering
+- **Donation Management**: CRUD operations for donation items with search and filtering
 - **Database**: MySQL with Sequelize ORM for robust data management
 - **Security**: Input validation, password hashing, rate limiting, CORS protection
 - **Email Validation**: Restricts access to @crk.umn.edu domain only
@@ -41,7 +41,7 @@ A Node.js/Express backend API for the UMC GreenMarket application with MySQL dat
    
    # Database configuration
    DB_HOST=localhost
-   DB_NAME=greenmarket
+   DB_NAME=umc_donations
    DB_USER=root
    DB_PASSWORD=your_mysql_password
    DB_PORT=3306
@@ -59,7 +59,7 @@ A Node.js/Express backend API for the UMC GreenMarket application with MySQL dat
 
 4. **Set up MySQL database:**
    ```sql
-   CREATE DATABASE greenmarket;
+   CREATE DATABASE umc_donations;
    ```
 
 5. **Start the server:**
@@ -131,11 +131,11 @@ Authorization: Bearer <jwt_token>
 Content-Type: application/json
 
 {
-  "title": "MacBook Pro 2021",
-  "description": "Excellent condition laptop, barely used",
-  "price": 1200.00,
-  "category": "electronics",
-  "condition": "like-new",
+  "title": "Used Textbook - Biology 101",
+  "description": "Good condition, some highlighting. Available for donation to students",
+  "price": 0.00,
+  "category": "books",
+  "condition": "good",
   "contactMethod": "email"
 }
 ```

@@ -8,7 +8,7 @@ const { auth, optionalAuth } = require('../middleware/auth');
 const router = express.Router();
 
 // @route   GET /api/items
-// @desc    Get all items with filtering and pagination
+// @desc    Get all donation items with filtering and pagination
 // @access  Public
 router.get('/', [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),

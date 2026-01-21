@@ -10,27 +10,25 @@ function Marketplace() {
   const [filters, setFilters] = useState({
     category: 'all',
     priceRange: 'all',
-    organic: false,
     search: ''
   });
 
-  // Mock data for demonstration
+  // Mock data for demonstration - Campus donations
   const mockItems = [
     {
       id: 1,
-      name: "Organic Tomatoes",
-      description: "Fresh, locally grown organic tomatoes perfect for salads and cooking",
-      price: 4.99,
-      category: "produce",
+      name: "Organic Textbook - Biology 101",
+      description: "Excellent condition, highlights throughout. Great for study prep.",
+      price: 0.00,
+      category: "books",
       image_url: null,
       in_stock: true,
-      quantity: 50,
-      unit: "lb",
-      is_organic: true,
-      seller: {
+      quantity: 1,
+      unit: "each",
+      donor: {
         id: 1,
         first_name: "John",
-        last_name: "Farmer"
+        last_name: "Student"
       }
     },
     {

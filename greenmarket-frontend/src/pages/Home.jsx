@@ -37,38 +37,38 @@ function Home() {
   const features = [
     {
       icon: <Leaf size={48} color="var(--accent-green)" />,
-      title: "100% Sustainable",
-      description: "Every product are donations from students and our community"
+      title: "100% Donations",
+      description: "Share items donated by students and faculty within our community"
     },
     {
       icon: <Users size={48} color="var(--accent-green)" />,
       title: "Community Driven",
-      description: "Supporting students and community"
+      description: "Supporting students, faculty, and building campus connections"
     },
     {
       icon: <Recycle size={48} color="var(--accent-green)" />,
       title: "Zero Waste",
-      description: "Promoting circular economy with reusable products"
+      description: "Promoting circular economy by reusing items on campus"
     }
   ];
 
   const testimonials = [
     {
       name: "Sarah Johnson",
-      role: "Eco Enthusiast",
-      content: "GreenMarket has transformed how I shop. I love supporting local farmers while reducing my carbon footprint!",
+      role: "Student",
+      content: "GreenMarket helped me find textbooks I needed without spending money. Great way to help the community!",
       rating: 5
     },
     {
       name: "Mike Chen",
-      role: "Organic Farmer",
-      content: "As a seller, I've found an amazing community here. My organic vegetables reach customers who truly value sustainability.",
+      role: "Faculty Member",
+      content: "As a donor, I love knowing my unused items go directly to students who need them. Makes a real difference!",
       rating: 5
     },
     {
       name: "Emma Wilson",
-      role: "Sustainable Living Advocate",
-      content: "The quality of products and the mission behind GreenMarket makes every purchase feel meaningful.",
+      role: "Campus Community Member",
+      content: "GreenMarket's mission of reducing waste and helping each other makes our campus stronger.",
       rating: 5
     }
   ];
@@ -85,19 +85,18 @@ function Home() {
           <div className="grid grid-2" style={{ alignItems: 'center' }}>
             <div>
               <h1 style={{ color: 'white', fontSize: '3rem', marginBottom: '1.5rem' }}>
-                Welcome to the Future of 
-                <span style={{ color: 'var(--accent-green)' }}> Sustainable </span>
-                Shopping
+                Welcome to GreenMarket:
+                <span style={{ color: 'var(--accent-green)' }}> Campus Giving & Sharing</span>
               </h1>
               <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-                Join our community marketplace where every purchase supports 
-                environmental sustainability and local businesses. Shop with purpose, 
-                live with impact.
+                Donate items you no longer need and receive items from our community. 
+                GreenMarket connects UMN Crookston students and faculty to reduce waste 
+                and support each other. Share with purpose, live sustainably.
               </p>
               <div className="flex gap-3">
                 <Link to="/marketplace" className="btn btn-accent">
                   <ShoppingBag size={20} />
-                  Start Shopping
+                  Browse Donations
                 </Link>
                 <Link to="/register" className="btn" style={{
                   background: 'transparent',
@@ -121,7 +120,7 @@ function Home() {
           <div className="text-center mb-4">
             <h2>Why Choose GreenMarket?</h2>
             <p style={{ color: 'var(--text-light)', fontSize: '1.1rem' }}>
-              We're more than just a marketplace - we're a movement towards sustainable living
+              We're a campus donation platform dedicated to reducing waste and building community
             </p>
           </div>
           
@@ -149,25 +148,25 @@ function Home() {
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-green)' }}>
                 500+
               </div>
-              <p style={{ color: 'var(--text-light)' }}>Eco Products</p>
+              <p style={{ color: 'var(--text-light)' }}>Items Available</p>
             </div>
             <div>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-green)' }}>
                 100+
               </div>
-              <p style={{ color: 'var(--text-light)' }}>Local Sellers</p>
+              <p style={{ color: 'var(--text-light)' }}>Donors</p>
             </div>
             <div>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-green)' }}>
                 1,000+
               </div>
-              <p style={{ color: 'var(--text-light)' }}>Happy Customers</p>
+              <p style={{ color: 'var(--text-light)' }}>Community Members</p>
             </div>
             <div>
               <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-green)' }}>
                 50%
               </div>
-              <p style={{ color: 'var(--text-light)' }}>Carbon Reduction</p>
+              <p style={{ color: 'var(--text-light)' }}>Waste Reduction</p>
             </div>
           </div>
         </div>

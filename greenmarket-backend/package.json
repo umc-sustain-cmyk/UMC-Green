@@ -1,7 +1,7 @@
 {
   "name": "greenmarket-backend",
   "version": "1.0.0",
-  "description": "Backend API for UMC GreenMarket application",
+  "description": "Backend API for GreenMarket - campus donation and item-sharing platform",
   "main": "server.js",
   "keywords": [
     "node",

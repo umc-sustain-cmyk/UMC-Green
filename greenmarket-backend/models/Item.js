@@ -109,8 +109,8 @@ const Item = sequelize.define('Item', {
 });
 
 // Define associations
-User.hasMany(Item, { foreignKey: 'userId', as: 'items' });
-Item.belongsTo(User, { foreignKey: 'userId', as: 'seller' });
+User.hasMany(Item, { foreignKey: 'userId', as: 'donations' });
+Item.belongsTo(User, { foreignKey: 'userId', as: 'donor' });
 
 // Instance methods
 Item.prototype.incrementViewCount = async function() {

@@ -1,19 +1,19 @@
 # GreenMarket Frontend
 
-A React.js frontend application for the GreenMarket sustainable community marketplace.
+A React.js frontend application for GreenMarket - an on-campus donation and item-sharing system for students and faculty.
 
-## 🌱 About
+## 🎁 About
 
-GreenMarket is a sustainable community marketplace that connects eco-conscious consumers with local farmers, artisans, and businesses committed to environmental responsibility.
+GreenMarket is a campus donation board where UMN Crookston students and faculty can donate and share items with the campus community. Reduce waste, help classmates, and build a stronger community through sustainable item sharing.
 
 ## 🚀 Features
 
-- **User Authentication** - Secure login/registration system
-- **Product Marketplace** - Browse and search sustainable products
-- **Seller Dashboard** - Manage products and track sales
+- **User Authentication** - Secure login/registration for campus community members
+- **Donation Board** - Browse and search donated items from students and faculty
+- **Personal Dashboard** - Manage your donations and requests
 - **Responsive Design** - Works on desktop, tablet, and mobile
-- **Modern UI** - Clean, green-themed interface with smooth animations
-- **Real-time Updates** - Dynamic product filtering and search
+- **Clean UI** - Simple, user-friendly interface for easy sharing
+- **Real-time Updates** - Dynamic item filtering and search
 
 ## 🛠️ Tech Stack
 
@@ -31,15 +31,15 @@ src/
 ├── components/          # Reusable UI components
 │   ├── Navbar.jsx      # Navigation bar
 │   ├── Footer.jsx      # Site footer
-│   └── ItemCard.jsx    # Product display card
+│   └── ItemCard.jsx    # Donation item display card
 ├── pages/              # Main application pages
 │   ├── Home.jsx        # Homepage
-│   ├── Marketplace.jsx # Product marketplace
+│   ├── Marketplace.jsx # Donation board / item listings
 │   ├── Login.jsx       # User login
 │   ├── Register.jsx    # User registration
-│   ├── Dashboard.jsx   # User/seller dashboard
-│   ├── AddItem.jsx     # Add new product
-│   ├── About.jsx       # About us page
+│   ├── Dashboard.jsx   # User dashboard for donations
+│   ├── AddItem.jsx     # Create new donation listing
+│   ├── About.jsx       # About the platform
 │   └── Contact.jsx     # Contact page
 ├── context/            # React context providers
 │   └── AuthContext.js  # Authentication context

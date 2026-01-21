@@ -43,7 +43,7 @@ function Navbar() {
           {/* Desktop Navigation */}
           <div className="flex gap-3" style={{ display: window.innerWidth < 768 ? 'none' : 'flex' }}>
             <Link to="/" className="btn btn-secondary">Home</Link>
-            <Link to="/marketplace" className="btn btn-secondary">Marketplace</Link>
+            <Link to="/marketplace" className="btn btn-secondary">Donations</Link>
             <Link to="/about" className="btn btn-secondary">About</Link>
             <Link to="/contact" className="btn btn-secondary">Contact</Link>
             
@@ -55,7 +55,7 @@ function Navbar() {
                 </Link>
                 <Link to="/add-item" className="btn btn-primary">
                   <Plus size={18} />
-                  Sell Item
+                  Donate Item
                 </Link>
                 <button onClick={handleLogout} className="btn btn-secondary">
                   Logout
@@ -91,7 +91,7 @@ function Navbar() {
                 Home
               </Link>
               <Link to="/marketplace" className="btn btn-secondary" onClick={() => setIsMenuOpen(false)}>
-                Marketplace
+                Donations
               </Link>
               <Link to="/about" className="btn btn-secondary" onClick={() => setIsMenuOpen(false)}>
                 About
@@ -108,7 +108,7 @@ function Navbar() {
                   </Link>
                   <Link to="/add-item" className="btn btn-primary" onClick={() => setIsMenuOpen(false)}>
                     <Plus size={18} />
-                    Sell Item
+                    Donate Item
                   </Link>
                   <button onClick={handleLogout} className="btn btn-secondary">
                     Logout

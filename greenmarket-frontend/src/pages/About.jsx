@@ -4,59 +4,59 @@ import { Leaf, Users, Target, Award, Heart, Lightbulb } from 'lucide-react';
 function About() {
   const team = [
     {
-      name: 'Sarah Green',
-      role: 'Founder & CEO',
-      bio: 'Environmental scientist passionate about sustainable commerce',
-      image: '👩‍💼'
+      name: 'Campus Team',
+      role: 'Founders & Organizers',
+      bio: 'Passionate students and faculty building a sustainable campus community',
+      image: '👥'
     },
     {
-      name: 'Mike Chen',
-      role: 'CTO',
-      bio: 'Full-stack developer building technology for positive impact',
-      image: '👨‍💻'
+      name: 'Student Leaders',
+      role: 'Volunteers & Coordinators',
+      bio: 'Dedicated to connecting the campus community through item sharing',
+      image: '🎓'
     },
     {
-      name: 'Emma Johnson',
-      role: 'Community Manager',
-      bio: 'Connecting local farmers and eco-conscious consumers',
-      image: '👩‍🌾'
+      name: 'Faculty Advisors',
+      role: 'Sustainability Champions',
+      bio: 'Supporting environmental initiatives and campus engagement',
+      image: '👨‍🎓'
     },
     {
-      name: 'David Wilson',
-      role: 'Sustainability Officer',
-      bio: 'Ensuring every product meets our environmental standards',
-      image: '👨‍🔬'
+      name: 'Community Members',
+      role: 'Active Participants',
+      bio: 'Donors and recipients making GreenMarket a thriving platform',
+      image: '🤝'
     }
   ];
 
   const values = [
     {
       icon: <Leaf size={48} color="var(--accent-green)" />,
-      title: 'Environmental First',
-      description: 'Every decision we make prioritizes the health of our planet and future generations.'
+      title: 'Sustainability',
+      description: 'Reduce waste and promote reuse within our campus community.'
     },
     {
       icon: <Users size={48} color="var(--accent-green)" />,
-      title: 'Community Driven',
-      description: 'We believe in the power of local communities to create positive environmental change.'
+      title: 'Community First',
+      description: 'We believe in the power of sharing and supporting each other.'
     },
     {
       icon: <Heart size={48} color="var(--accent-green)" />,
-      title: 'Ethical Commerce',
-      description: 'Fair trade, transparent pricing, and supporting small sustainable businesses.'
+      title: 'Generosity',
+      description: 'Helping students and faculty access items they need freely.'
     },
     {
       icon: <Lightbulb size={48} color="var(--accent-green)" />,
-      title: 'Innovation',
-      description: 'Continuously improving technology to make sustainable living more accessible.'
+      title: 'Impact',
+      description: 'Creating positive environmental and social change at UMN Crookston.'
     }
   ];
 
   const stats = [
-    { number: '10,000+', label: 'Products Sold', icon: '📦' },
-    { number: '500+', label: 'Local Sellers', icon: '👥' },
-    { number: '50 tons', label: 'CO₂ Reduced', icon: '🌱' },
-    { number: '25 states', label: 'Communities Served', icon: '🇺🇸' }
+    { number: '500+', label: 'Items Available', icon: '📦' },
+    { number: '100+', label: 'Active Donors', icon: '👥' },
+    { number: '1,000+', label: 'Community Members', icon: '🌱' },
+    { number: '50%', label: 'Waste Reduction', icon: '♻️' }
   ];
 
   return (
@@ -73,8 +73,8 @@ function About() {
               About GreenMarket
             </h1>
             <p style={{ fontSize: '1.3rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
-              We're on a mission to make sustainable living accessible, affordable, 
-              and rewarding for everyone while supporting local communities.
+              We're on a mission to create a sustainable UMN Crookston campus by enabling 
+              students and faculty to share and donate items, reducing waste and building community.
             </p>
           </div>
         </div>

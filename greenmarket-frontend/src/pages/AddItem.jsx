@@ -12,31 +12,16 @@ function AddItem() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    price: '',
-    category: 'produce',
+    price: '0.00',
+    category: 'books',
     quantity: 1,
-    unit: 'piece',
-    isOrganic: false,
+    unit: 'each',
     image: null
   });
 
-  // Redirect if not authenticated or not a seller
+  // Redirect if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
-  }
-
-  if (user?.role !== 'seller') {
-    return (
-      <div className="container section">
-        <div className="text-center">
-          <h2>Access Denied</h2>
-          <p>You need to be a seller to add products.</p>
-          <a href="/marketplace" className="btn btn-primary">
-            Browse Marketplace Instead
-          </a>
-        </div>
-      </div>
-    );
   }
 
   const handleChange = (e) => {
@@ -119,9 +104,9 @@ function AddItem() {
         <div className="card" style={{ maxWidth: '600px', width: '100%' }}>
           <div className="text-center mb-4">
             <Package size={48} color="var(--primary-green)" />
-            <h2>Add New Product</h2>
+            <h2>Donate an Item</h2>
             <p style={{ color: 'var(--text-light)' }}>
-              List your sustainable product on GreenMarket
+              Share an item with the GreenMarket community
             </p>
           </div>
 
@@ -140,12 +125,12 @@ function AddItem() {
           <form onSubmit={handleSubmit}>
             {/* Product Name */}
             <div className="form-group">
-              <label className="form-label">Product Name *</label>
+              <label className="form-label">Item Name *</label>
               <input
                 type="text"
                 name="name"
                 className="form-input"
-                placeholder="Enter product name"
+                placeholder="e.g., Used Textbook, Furniture, Clothing"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -158,7 +143,7 @@ function AddItem() {
               <textarea
                 name="description"
                 className="form-textarea"
-                placeholder="Describe your product, its benefits, and what makes it sustainable"
+                placeholder="Describe the item's condition, features, and why it's being shared"
                 value={formData.description}
                 onChange={handleChange}
                 rows="4"
@@ -192,18 +177,19 @@ function AddItem() {
                     style={{ paddingLeft: '40px' }}
                     required
                   >
-                    <option value="produce">Produce</option>
-                    <option value="dairy">Dairy</option>
-                    <option value="meat">Meat</option>
-                    <option value="grains">Grains</option>
-                    <option value="beverages">Beverages</option>
+                    <option value="books">Books & Textbooks</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing & Shoes</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="sports">Sports & Outdoors</option>
+                    <option value="home">Home & Kitchen</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Price *</label>
+                <label className="form-label">Suggested Price (Optional)</label>
                 <div style={{ position: 'relative' }}>
                   <DollarSign 
                     size={20} 
@@ -219,13 +205,12 @@ function AddItem() {
                     type="number"
                     name="price"
                     className="form-input"
-                    placeholder="0.00"
+                    placeholder="0.00 (leave blank for free)"
                     value={formData.price}
                     onChange={handleChange}
                     style={{ paddingLeft: '40px' }}
                     min="0"
                     step="0.01"
-                    required
                   />
                 </div>
               </div>
