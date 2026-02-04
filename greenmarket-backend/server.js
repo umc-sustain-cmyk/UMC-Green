@@ -25,11 +25,22 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: [
-    'http://localhost:5173', // Local development
-    'https://umc-green.vercel.app' // Production deployment
-  ],
-  credentials: true
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'https://umc-green.vercel.app',
+      'https://www.umc-green.vercel.app'
+    ];
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Body parsing middleware
