@@ -189,32 +189,7 @@ function AddItem() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Suggested Price (Optional)</label>
-                <div style={{ position: 'relative' }}>
-                  <DollarSign 
-                    size={20} 
-                    style={{
-                      position: 'absolute',
-                      left: '12px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: 'var(--text-light)'
-                    }}
-                  />
-                  <input
-                    type="number"
-                    name="price"
-                    className="form-input"
-                    placeholder="0.00 (leave blank for free)"
-                    value={formData.price}
-                    onChange={handleChange}
-                    style={{ paddingLeft: '40px' }}
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-              </div>
+
             </div>
 
             {/* Quantity and Unit */}

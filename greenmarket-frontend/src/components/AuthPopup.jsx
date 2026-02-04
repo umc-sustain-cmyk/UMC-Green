@@ -21,7 +21,7 @@ function AuthPopup({ isOpen, onClose }) {
     lastName: '',
     email: '',
     password: '',
-    role: 'user'
+    role: 'student'
   }); 
 
   // Don't show popup if user is already authenticated
@@ -130,7 +130,7 @@ function AuthPopup({ isOpen, onClose }) {
     setIsLoginMode(!isLoginMode);
     setError('');
     setLoginData({ email: '', password: '' });
-    setRegisterData({ firstName: '', lastName: '', email: '', password: '', role: 'user' });
+    setRegisterData({ firstName: '', lastName: '', email: '', password: '', role: 'student' });
   };
 
   return (
@@ -338,7 +338,7 @@ function AuthPopup({ isOpen, onClose }) {
                 value={registerData.role}
                 onChange={handleRegisterChange}
               >
-                <option value="user">Student/Faculty - Donate or receive items</option>
+                <option value="student">Student/Faculty - Donate or receive items</option>
               </select>
             </div>
 

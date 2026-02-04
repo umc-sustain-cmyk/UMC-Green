@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, Phone } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
+import api from '../utils/api';
 
 function Register() {
   const { login } = useContext(AuthContext);
@@ -17,7 +18,7 @@ function Register() {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: 'user',
+    role: 'student',
     agreedToTerms: false
   });
 
@@ -77,26 +78,33 @@ function Register() {
     setError('');
 
     try {
-      // TODO: Replace with actual API call
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock successful registration
-      const mockUser = {
-        id: Date.now(),
-        email: formData.email,
+      const response = await api.post('/auth/register', {
         firstName: formData.firstName,
         lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone || null,
         role: formData.role
-      };
-      
-      const mockToken = 'mock-jwt-token';
-      
-      login(mockUser, mockToken);
-      navigate('/dashboard');
+      });
+
+      if (response.data.success) {
+        // Store token and user info
+        const token = response.data.data.token;
+        const user = response.data.data.user;
+        
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Update context
+        login(user, token);
+        navigate('/dashboard');
+      }
       
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      const errorMessage = err.response?.data?.message || 
+                          (err.response?.data?.errors?.[0]?.msg) ||
+                          'Registration failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

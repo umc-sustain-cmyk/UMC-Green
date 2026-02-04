@@ -56,7 +56,16 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+      const errorData = error.response?.data;
+      let errorMessage = 'Login failed. Please try again.';
+      
+      // Handle validation errors array from backend
+      if (errorData?.errors && Array.isArray(errorData.errors)) {
+        errorMessage = errorData.errors.map(e => e.msg).join('; ');
+      } else if (errorData?.message) {
+        errorMessage = errorData.message;
+      }
+      
       return { success: false, message: errorMessage };
     }
   };
@@ -79,7 +88,16 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      const errorData = error.response?.data;
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      // Handle validation errors array from backend
+      if (errorData?.errors && Array.isArray(errorData.errors)) {
+        errorMessage = errorData.errors.map(e => e.msg).join('; ');
+      } else if (errorData?.message) {
+        errorMessage = errorData.message;
+      }
+      
       return { success: false, message: errorMessage };
     }
   };
