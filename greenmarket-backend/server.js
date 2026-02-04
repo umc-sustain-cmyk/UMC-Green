@@ -10,7 +10,7 @@ const rateLimit = require('express-rate-limit');
 const sequelize = require('./config/database');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000; // Use fixed port 5000
 
 // Security middleware - apply FIRST before everything
 app.use(helmet());
