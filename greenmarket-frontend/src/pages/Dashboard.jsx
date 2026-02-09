@@ -47,26 +47,7 @@ function Dashboard() {
     activityHistory: userItems.length
   };
 
-  const recentActivity = [
-    {
-      id: 1,
-      type: 'received',
-      description: 'Received Textbook - Biology 101',
-      date: '2025-10-06'
-    },
-    {
-      id: 2,
-      type: 'donated',
-      description: 'Donated Desk Chair',
-      date: '2025-10-05'
-    },
-    {
-      id: 3,
-      type: 'received',
-      description: 'Received College Backpack',
-      date: '2025-10-04'
-    }
-  ];
+  const recentActivity = [];
 
   return (
     <div className="container section">

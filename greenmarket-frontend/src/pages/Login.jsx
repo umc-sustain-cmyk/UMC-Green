@@ -36,26 +36,15 @@ function Login() {
     }
 
     try {
-      // TODO: Replace with actual API call
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await authAPI.login(formData.email, formData.password);
       
-      // Mock successful login
-      const mockUser = {
-        id: 1,
-        email: formData.email,
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'user'
-      };
-      
-      const mockToken = 'mock-jwt-token';
-      
-      login(mockUser, mockToken);
-      navigate('/dashboard');
+      if (response.success) {
+        login(response.data.user, response.data.token);
+        navigate('/dashboard');
+      }
       
     } catch (err) {
-      setError('Invalid email or password. Please try again.');
+      setError(err.message || 'Invalid email or password. Please try again.');
     } finally {
       setLoading(false);
     }
