@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Leaf, Menu, X, User, ShoppingCart, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +7,16 @@ function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -41,7 +51,7 @@ function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="flex gap-3" style={{ display: window.innerWidth < 768 ? 'none' : 'flex', marginLeft: 'auto' }}>
+          <div className="flex gap-3" style={{ display: isMobile ? 'none' : 'flex', marginLeft: 'auto' }}>
             <Link to="/" className="btn btn-secondary">Home</Link>
             <Link to="/marketplace" className="btn btn-secondary">Donations</Link>
             <Link to="/about" className="btn btn-secondary">About</Link>
@@ -73,7 +83,7 @@ function Navbar() {
           <button 
             onClick={toggleMenu}
             className="btn btn-secondary"
-            style={{ display: window.innerWidth >= 768 ? 'none' : 'flex' }}
+            style={{ display: !isMobile ? 'none' : 'flex' }}
           >
             {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
