@@ -41,7 +41,7 @@ function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="flex gap-3" style={{ display: window.innerWidth < 768 ? 'none' : 'flex' }}>
+          <div className="flex gap-3" style={{ display: window.innerWidth < 768 ? 'none' : 'flex', marginLeft: 'auto' }}>
             <Link to="/" className="btn btn-secondary">Home</Link>
             <Link to="/marketplace" className="btn btn-secondary">Donations</Link>
             <Link to="/about" className="btn btn-secondary">About</Link>
