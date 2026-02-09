@@ -31,9 +31,9 @@ router.post('/register', [
     .isEmail()
     .withMessage('Please enter a valid email')
     .custom((value) => {
-      const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/;
+      const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@(crk\.)?umn\.edu$/;
       if (!umnEmailRegex.test(value)) {
-        throw new Error('Email must be a valid UMN Crookston email (@crk.umn.edu)');
+        throw new Error('Email must be a valid UMN email (@umn.edu or @crk.umn.edu)');
       }
       return true;
     }),
@@ -151,11 +151,11 @@ router.post('/login', [
     const { email, password } = req.body;
 
     // Validate UMN email domain
-    const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/;
+    const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@(crk\.)?umn\.edu$/;
     if (!umnEmailRegex.test(email)) {
       return res.status(400).json({
         success: false,
-        message: 'Please use your UMN Crookston email (@crk.umn.edu)'
+        message: 'Please use your UMN email (@umn.edu or @crk.umn.edu)'
       });
     }
 
