@@ -202,9 +202,20 @@ router.post('/login', [
 
   } catch (error) {
     console.error('Login error:', error);
+    
+    // Better error diagnostics for debugging
+    if (error.name === 'SequelizeDatabaseError') {
+      console.error('Database error during login - migrations may not have run:', error.message);
+      return res.status(500).json({
+        success: false,
+        message: 'Database connection error - please try again later'
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: 'Server error during login'
+      message: 'Server error during login',
+      ...(process.env.NODE_ENV === 'development' && { error: error.message })
     });
   }
 });

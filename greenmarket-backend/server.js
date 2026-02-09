@@ -3,6 +3,16 @@ const dotenv = require('dotenv');
 // Load environment variables FIRST
 dotenv.config();
 
+// Validate critical environment variables
+const requiredEnvVars = ['JWT_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0 && process.env.NODE_ENV === 'production') {
+  console.error('🔴 CRITICAL: Missing required environment variables:', missingEnvVars.join(', '));
+  console.error('Please set these in your Railway dashboard before deploying.');
+  process.exit(1);
+}
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -10,7 +20,7 @@ const rateLimit = require('express-rate-limit');
 const sequelize = require('./config/database');
 
 const app = express();
-const PORT = 5000; // Use fixed port 5000
+const PORT = process.env.PORT || 5000;
 
 // Security middleware - apply FIRST before everything
 app.use(helmet());

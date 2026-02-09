@@ -45,9 +45,31 @@ done
 echo "[start.sh] Running migrations (if any)..."
 # Run migrations and seeders if npx is available; don't fail the start if they error.
 if command -v npx >/dev/null 2>&1; then
-  npx sequelize-cli db:migrate || true
+  echo "[start.sh] Executing: npx sequelize-cli db:migrate"
+  if npx sequelize-cli db:migrate; then
+    echo "[start.sh] ✅ Migrations completed successfully"
+  else
+    echo "[start.sh] ⚠️  Migrations failed or returned non-zero exit code - continuing anyway"
+  fi
+  
   echo "[start.sh] Running seeders (if any)..."
-  npx sequelize-cli db:seed:all || true
+  echo "[start.sh] Executing: npx sequelize-cli db:seed:all"
+  if npx sequelize-cli db:seed:all; then
+    echo "[start.sh] ✅ Seeders completed successfully"
+  else
+    echo "[start.sh] ⚠️  Seeders failed or returned non-zero exit code - continuing anyway"
+  fi
+else
+  echo "[start.sh] ⚠️  npx not found - skipping migrations and seeders"
+fi
+
+# Validate environment before starting
+echo "[start.sh] Validating environment variables..."
+if [ -z "$DB_HOST" ]; then
+  echo "[start.sh] ⚠️  WARNING: DB_HOST not set"
+fi
+if [ -z "$JWT_SECRET" ]; then
+  echo "[start.sh] 🔴 ERROR: JWT_SECRET is not set! Login will fail."
 fi
 
 echo "[start.sh] Starting application..."
