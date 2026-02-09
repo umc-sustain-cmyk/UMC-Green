@@ -191,10 +191,6 @@ function Dashboard() {
             </div>
           )}
         </div>
-          <button className="btn btn-secondary mt-3" style={{ width: '100%' }}>
-            View All Activity
-          </button>
-        </div>
 
         {/* Quick Actions */}
         <div className="card">
