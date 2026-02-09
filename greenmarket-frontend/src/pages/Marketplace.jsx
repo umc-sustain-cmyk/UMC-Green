@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Grid, List } from 'lucide-react';
+import { Search, Filter, Grid, List, AlertCircle } from 'lucide-react';
 import ItemCard from '../components/ItemCard';
+import { itemAPI } from '../services/api';
 
 function Marketplace() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   const [filters, setFilters] = useState({
     category: 'all',
@@ -13,107 +15,28 @@ function Marketplace() {
     search: ''
   });
 
-  // Mock data for demonstration - Campus donations
-  const mockItems = [
-    {
-      id: 1,
-      name: "Used Textbook - Biology 101",
-      description: "Excellent condition, minimal highlighting. Great for study prep.",
-      price: 0.00,
-      category: "books",
-      condition: "good",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 1,
-        first_name: "Sarah",
-        last_name: "Johnson"
-      }
-    },
-    {
-      id: 2,
-      name: "Desk Lamp",
-      description: "LED desk lamp in good working condition. Perfect for studying.",
-      price: 0.00,
-      category: "home",
-      condition: "like-new",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 2,
-        first_name: "Mike",
-        last_name: "Chen"
-      }
-    },
-    {
-      id: 3,
-      name: "Winter Jacket",
-      description: "Warm winter jacket, barely worn. Size Medium.",
-      price: 0.00,
-      category: "clothing",
-      condition: "like-new",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 3,
-        first_name: "Emma",
-        last_name: "Williams"
-      }
-    },
-    {
-      id: 4,
-      name: "Computer Monitor",
-      description: "24-inch monitor, working perfectly. Great for online classes.",
-      price: 0.00,
-      category: "electronics",
-      condition: "good",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 4,
-        first_name: "John",
-        last_name: "Davis"
-      }
-    },
-    {
-      id: 5,
-      name: "Science Fiction Book Set",
-      description: "Set of 3 classic sci-fi novels in excellent condition.",
-      price: 0.00,
-      category: "books",
-      condition: "like-new",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 5,
-        first_name: "Alex",
-        last_name: "Robinson"
-      }
-    },
-    {
-      id: 6,
-      name: "Skateboard",
-      description: "Lightly used skateboard, all components working great.",
-      price: 0.00,
-      category: "sports",
-      condition: "good",
-      image_url: null,
-      in_stock: true,
-      donor: {
-        id: 6,
-        first_name: "Jordan",
-        last_name: "Martinez"
-      }
-    }
-  ];
-
+  // Fetch items from backend
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setItems(mockItems);
-      setFilteredItems(mockItems);
-      setLoading(false);
-    }, 1000);
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        const response = await itemAPI.getItems({
+          limit: 50,
+          page: 1
+        });
+        if (response.success) {
+          setItems(response.data.items);
+          setFilteredItems(response.data.items);
+        }
+      } catch (err) {
+        console.error('Error fetching items:', err);
+        setError('Failed to load donations. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
   }, []);
 
   useEffect(() => {
@@ -136,7 +59,7 @@ function Marketplace() {
     // Search filter
     if (filters.search) {
       filtered = filtered.filter(item =>
-        item.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+        item.title.toLowerCase().includes(filters.search.toLowerCase()) ||
         item.description.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
@@ -290,14 +213,32 @@ function Marketplace() {
       </div>
 
       {/* Items Grid */}
-      {filteredItems.length > 0 ? (
+      {loading ? (
+        <div className="text-center p-4">
+          <p>Loading donations...</p>
+        </div>
+      ) : error ? (
+        <div style={{
+          padding: '2rem',
+          background: '#fee',
+          border: '1px solid #fcc',
+          borderRadius: '8px',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'flex-start'
+        }}>
+          <AlertCircle size={24} style={{ color: '#c33', flexShrink: 0 }} />
+          <div style={{ color: '#c33' }}>
+            <h4 style={{ margin: '0 0 0.5rem 0' }}>Failed to Load Donations</h4>
+            <p style={{ margin: 0 }}>{error}</p>
+          </div>
+        </div>
+      ) : filteredItems.length > 0 ? (
         <div className={viewMode === 'grid' ? 'grid grid-3' : 'flex-column gap-3'}>
           {filteredItems.map(item => (
             <ItemCard
               key={item.id}
               item={item}
-              onReserveItem={handleAddToCart}
-              onToggleFavorite={handleToggleFavorite}
             />
           ))}
         </div>

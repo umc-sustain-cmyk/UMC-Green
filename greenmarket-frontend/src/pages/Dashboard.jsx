@@ -1,23 +1,50 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { User, Package, ShoppingCart, Settings, Plus, BarChart3 } from 'lucide-react';
+import { User, Package, ShoppingCart, Settings, Plus, BarChart3, AlertCircle } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
+import { itemAPI } from '../services/api';
+import ItemCard from '../components/ItemCard';
 
 function Dashboard() {
   const { user, isAuthenticated } = useContext(AuthContext);
+  const [userItems, setUserItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Mock user stats
+  // Fetch user's items
+  useEffect(() => {
+    const fetchUserItems = async () => {
+      try {
+        setLoading(true);
+        const response = await itemAPI.getItemsByUser(user?.id);
+        if (response.success) {
+          setUserItems(response.data.items);
+        }
+      } catch (err) {
+        console.error('Error fetching user items:', err);
+        setError('Failed to load your donations');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user?.id) {
+      fetchUserItems();
+    }
+  }, [user?.id]);
+
+  // Calculate stats from actual items
   const userStats = {
-    itemsDonated: 5,
-    itemsReceived: 8,
-    sustainabilityPoints: 156,
-    favoriteItems: 5,
-    activityHistory: 12
+    itemsDonated: userItems.length,
+    itemsReceived: 0,
+    sustainabilityPoints: userItems.length * 10,
+    favoriteItems: 0,
+    activityHistory: userItems.length
   };
 
   const recentActivity = [
@@ -97,33 +124,73 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-2">
-        {/* Recent Activity */}
+        {/* Your Donations */}
         <div className="card">
-          <h3 style={{ marginBottom: '1.5rem' }}>Recent Activity</h3>
-          <div className="flex-column gap-3">
-            {recentActivity.map(activity => (
-              <div key={activity.id} className="flex-between" style={{
-                padding: '1rem',
-                background: 'var(--bg-light)',
-                borderRadius: '8px'
-              }}>
-                <div>
-                  <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
-                    {activity.description}
+          <h3 style={{ marginBottom: '1.5rem' }}>Your Donations 🎁</h3>
+          {loading ? (
+            <p style={{ color: 'var(--text-light)' }}>Loading your donations...</p>
+          ) : error ? (
+            <div style={{ 
+              padding: '1rem', 
+              background: '#fee', 
+              border: '1px solid #fcc', 
+              borderRadius: '8px',
+              color: '#c33',
+              display: 'flex',
+              gap: '0.5rem',
+              alignItems: 'center'
+            }}>
+              <AlertCircle size={18} />
+              {error}
+            </div>
+          ) : userItems.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+              <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>
+                You haven't donated any items yet
+              </p>
+              <a href="/add-item" className="btn btn-primary">
+                <Plus size={18} />
+                Donate Your First Item
+              </a>
+            </div>
+          ) : (
+            <div>
+              <div className="flex-column gap-2">
+                {userItems.slice(0, 3).map(item => (
+                  <div key={item.id} style={{
+                    padding: '1rem',
+                    background: 'var(--bg-light)',
+                    borderRadius: '8px',
+                    borderLeft: '4px solid var(--primary-green)'
+                  }}>
+                    <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
+                      {item.title}
+                    </div>
+                    <div style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                      {item.condition} • {item.category}
+                    </div>
+                    <div style={{ 
+                      display: 'inline-block',
+                      marginTop: '0.5rem',
+                      fontSize: '0.85rem',
+                      padding: '0.25rem 0.75rem',
+                      background: item.isAvailable ? '#e8f5e9' : '#ffebee',
+                      color: item.isAvailable ? '#2e7d32' : '#c62828',
+                      borderRadius: '20px'
+                    }}>
+                      {item.isAvailable ? '✓ Available' : '✗ Taken'}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                    {new Date(activity.date).toLocaleDateString()}
-                  </div>
-                </div>
-                <div style={{
-                  fontWeight: 'bold',
-                  color: activity.type === 'received' ? 'var(--primary-green)' : 'var(--accent-green)'
-                }}>
-                  {activity.type === 'received' ? '📦' : '🎁'}
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+              {userItems.length > 3 && (
+                <button className="btn btn-secondary mt-3" style={{ width: '100%' }}>
+                  View All {userItems.length} Donations
+                </button>
+              )}
+            </div>
+          )}
+        </div>
           <button className="btn btn-secondary mt-3" style={{ width: '100%' }}>
             View All Activity
           </button>
