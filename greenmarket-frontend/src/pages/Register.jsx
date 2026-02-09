@@ -44,8 +44,8 @@ function Register() {
       setError('Email is required');
       return false;
     }
-    if (!/^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/.test(formData.email)) {
-      setError('Please use your UMN Crookston email (@crk.umn.edu)');
+    if (!/^[a-zA-Z0-9._%+-]+@(crk\.)?umn\.edu$/.test(formData.email)) {
+      setError('Please use your UMN email (@umn.edu or @crk.umn.edu)');
       return false;
     }
     if (!formData.password) {
