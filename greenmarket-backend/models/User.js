@@ -31,9 +31,9 @@ const User = sequelize.define('User', {
     validate: {
       isEmail: true,
       isUMNEmail(value) {
-        const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@crk\.umn\.edu$/;
+        const umnEmailRegex = /^[a-zA-Z0-9._%+-]+@(crk\.)?umn\.edu$/;
         if (!umnEmailRegex.test(value)) {
-          throw new Error('Email must be a valid UMN Crookston email (@crk.umn.edu)');
+          throw new Error('Email must be a valid UMN email (@umn.edu or @crk.umn.edu)');
         }
       }
     }
