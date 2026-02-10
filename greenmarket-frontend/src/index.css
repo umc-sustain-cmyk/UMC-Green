@@ -89,6 +89,18 @@ h3 { font-size: 1.5rem; }
   color: white;
 }
 
+.btn-text {
+  background-color: transparent;
+  color: var(--primary-green);
+  border: none;
+  padding: 0.5rem 1rem;
+}
+
+.btn-text:hover {
+  background-color: var(--bg-light);
+  border-radius: 8px;
+}
+
 .btn-accent {
   background-color: var(--accent-green);
   color: white;

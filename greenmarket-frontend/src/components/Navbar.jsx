@@ -51,32 +51,42 @@ function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="flex gap-3" style={{ display: isMobile ? 'none' : 'flex', marginLeft: 'auto' }}>
-            <Link to="/" className="btn btn-secondary">Home</Link>
-            <Link to="/marketplace" className="btn btn-secondary">Donations</Link>
-            <Link to="/about" className="btn btn-secondary">About</Link>
-            <Link to="/contact" className="btn btn-secondary">Contact</Link>
-            
-            {isAuthenticated ? (
-              <>
-                <Link to="/dashboard" className="btn btn-secondary">
-                  <User size={18} />
-                  Dashboard
-                </Link>
-                <Link to="/add-item" className="btn btn-primary">
-                  <Plus size={18} />
-                  Donate Item
-                </Link>
-                <button onClick={handleLogout} className="btn btn-secondary">
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="btn btn-secondary">Login</Link>
-                <Link to="/register" className="btn btn-primary">Sign Up</Link>
-              </>
-            )}
+          <div style={{ display: isMobile ? 'none' : 'flex', marginLeft: 'auto', gap: '2rem', alignItems: 'center' }}>
+            {/* Main Navigation Links */}
+            <div className="flex gap-1">
+              <Link to="/" className="btn btn-text">Home</Link>
+              <Link to="/marketplace" className="btn btn-text">Donations</Link>
+              <Link to="/about" className="btn btn-text">About</Link>
+              <Link to="/contact" className="btn btn-text">Contact</Link>
+            </div>
+
+            {/* User Actions */}
+            <div className="flex gap-2">
+              {isAuthenticated ? (
+                <>
+                  <button 
+                    onClick={() => navigate('/dashboard')}
+                    className="btn btn-secondary"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <User size={18} />
+                    Dashboard
+                  </button>
+                  <Link to="/add-item" className="btn btn-primary">
+                    <Plus size={18} />
+                    Donate Item
+                  </Link>
+                  <button onClick={handleLogout} className="btn btn-secondary">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-secondary">Login</Link>
+                  <Link to="/register" className="btn btn-primary">Sign Up</Link>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -120,7 +130,7 @@ function Navbar() {
                     <Plus size={18} />
                     Donate Item
                   </Link>
-                  <button onClick={handleLogout} className="btn btn-secondary">
+                  <button onClick={handleLogout} className="btn btn-secondary" style={{ width: '100%' }}>
                     Logout
                   </button>
                 </>
