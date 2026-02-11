@@ -29,6 +29,15 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Log network errors for debugging
+    if (error.code === 'ERR_NETWORK' || !error.response) {
+      console.error('Network error - Backend may be unreachable:', {
+        url: error.config?.baseURL,
+        endpoint: error.config?.url,
+        error: error.message
+      });
+    }
+    
     if (error.response?.status === 401) {
       // Token expired or invalid
       localStorage.removeItem('token');
