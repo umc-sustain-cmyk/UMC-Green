@@ -1,7 +1,9 @@
 const dotenv = require('dotenv');
 
 // Load environment variables FIRST
+console.log('🔧 Loading environment variables...');
 dotenv.config();
+console.log('✅ Environment variables loaded');
 
 // Validate critical environment variables
 const requiredEnvVars = ['JWT_SECRET'];
@@ -13,11 +15,16 @@ if (missingEnvVars.length > 0 && process.env.NODE_ENV === 'production') {
   process.exit(1);
 }
 
+console.log('🔧 Loading Express and dependencies...');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+console.log('✅ Express and dependencies loaded');
+
+console.log('🔧 Loading database configuration...');
 const sequelize = require('./config/database');
+console.log('✅ Database configuration loaded');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -60,10 +67,18 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/items', require('./routes/items'));
+console.log('🔧 Loading routes...');
+try {
+  app.use('/api/auth', require('./routes/auth'));
+  console.log('✅ Auth routes loaded');
+  app.use('/api/users', require('./routes/users'));
+  console.log('✅ User routes loaded');
+  app.use('/api/items', require('./routes/items'));
+  console.log('✅ Item routes loaded');
+} catch (err) {
+  console.error('❌ Failed to load routes:', err.message);
+  process.exit(1);
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -160,8 +175,15 @@ const startServer = async () => {
 };
 
 // Only start the server when not running tests. Tests will import `app` directly.
+console.log('🔧 Checking if server should start (NODE_ENV=' + process.env.NODE_ENV + ')...');
 if (process.env.NODE_ENV !== 'test') {
-  startServer();
+  console.log('🚀 Starting server...');
+  startServer().catch(err => {
+    console.error('❌ Fatal error in startServer:', err);
+    process.exit(1);
+  });
+} else {
+  console.log('ℹ️ Test mode detected - server not started');
 }
 
 module.exports = app;
