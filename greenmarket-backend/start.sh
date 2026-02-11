@@ -27,15 +27,15 @@ fi
 # Wait for database to be available (use DB_HOST/DB_PORT or MYSQL_HOST/MYSQL_PORT), retry a few times.
 DB_HOST=${DB_HOST:-${MYSQL_HOST:-127.0.0.1}}
 DB_PORT=${DB_PORT:-${MYSQL_PORT:-3306}}
-MAX_RETRIES=${DB_WAIT_RETRIES:-30}
-RETRY_DELAY=${DB_WAIT_DELAY:-2}
+MAX_RETRIES=${DB_WAIT_RETRIES:-60}
+RETRY_DELAY=${DB_WAIT_DELAY:-1}
 
 echo "[start.sh] Waiting for database at $DB_HOST:$DB_PORT (up to $MAX_RETRIES attempts)..."
 attempt=0
 until node -e "const net=require('net'); const s=net.createConnection({host: '$DB_HOST', port: $DB_PORT}); s.on('connect', ()=>{console.log('db:open'); s.end(); process.exit(0)}); s.on('error', ()=>process.exit(1));"; do
   attempt=$((attempt+1))
   if [ "$attempt" -ge "$MAX_RETRIES" ]; then
-    echo "[start.sh] Database still unavailable after $attempt attempts; continuing (migrations may fail)."
+    echo "[start.sh] Database still unavailable after $attempt attempts; continuing (database connection errors will be handled by server)."
     break
   fi
   echo "[start.sh] Database not ready yet — attempt $attempt/$MAX_RETRIES. Sleeping $RETRY_DELAY s..."
@@ -43,24 +43,29 @@ until node -e "const net=require('net'); const s=net.createConnection({host: '$D
 done
 
 echo "[start.sh] Running migrations (if any)..."
-# Run migrations and seeders if npx is available; don't fail the start if they error.
-if command -v npx >/dev/null 2>&1; then
-  echo "[start.sh] Executing: npx sequelize-cli db:migrate"
-  if npx sequelize-cli db:migrate; then
-    echo "[start.sh] ✅ Migrations completed successfully"
-  else
-    echo "[start.sh] ⚠️  Migrations failed or returned non-zero exit code - continuing anyway"
-  fi
-  
-  echo "[start.sh] Running seeders (if any)..."
-  echo "[start.sh] Executing: npx sequelize-cli db:seed:all"
-  if npx sequelize-cli db:seed:all; then
-    echo "[start.sh] ✅ Seeders completed successfully"
-  else
-    echo "[start.sh] ⚠️  Seeders failed or returned non-zero exit code - continuing anyway"
-  fi
+# In production, skip migrations/seeders since they should be run separately
+if [ "$NODE_ENV" = "production" ]; then
+  echo "[start.sh] Production mode - skipping migrations/seeders (should be applied before deployment)"
 else
-  echo "[start.sh] ⚠️  npx not found - skipping migrations and seeders"
+  # Run migrations and seeders if npx is available; don't fail the start if they error.
+  if command -v npx >/dev/null 2>&1; then
+    echo "[start.sh] Executing: npx sequelize-cli db:migrate"
+    if npx sequelize-cli db:migrate; then
+      echo "[start.sh] ✅ Migrations completed successfully"
+    else
+      echo "[start.sh] ⚠️  Migrations failed or returned non-zero exit code - continuing anyway"
+    fi
+    
+    echo "[start.sh] Running seeders (if any)..."
+    echo "[start.sh] Executing: npx sequelize-cli db:seed:all"
+    if npx sequelize-cli db:seed:all; then
+      echo "[start.sh] ✅ Seeders completed successfully"
+    else
+      echo "[start.sh] ⚠️  Seeders failed or returned non-zero exit code - continuing anyway"
+    fi
+  else
+    echo "[start.sh] ⚠️  npx not found - skipping migrations and seeders"
+  fi
 fi
 
 # Validate environment before starting
