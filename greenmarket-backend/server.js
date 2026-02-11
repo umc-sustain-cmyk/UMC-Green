@@ -169,7 +169,14 @@ const startServer = async () => {
     });
     
   } catch (error) {
-    console.error('❌ Unable to start server:', error);
+    console.error('❌ Unable to start server:', error.message);
+    console.error('Error details:', error);
+    if (error.name === 'SequelizeConnectionError') {
+      console.error('🔴 DATABASE CONNECTION ERROR - Check that:');
+      console.error('  1. MySQL service is running on Railway');
+      console.error('  2. DATABASE_URL or DB_HOST/DB_USER/DB_PASSWORD env vars are set');
+      console.error('  3. Database credentials are correct');
+    }
     process.exit(1);
   }
 };

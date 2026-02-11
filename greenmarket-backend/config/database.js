@@ -21,25 +21,59 @@ if (useSqliteInMemory) {
 
 } else {
   // Create Sequelize instance with MySQL connection for dev/prod and CI MySQL job
-  console.log('📋 Database config:');
-  console.log('  - Host:', process.env.DB_HOST || 'localhost');
-  console.log('  - Port:', process.env.DB_PORT || 3306);
-  console.log('  - Database:', process.env.DB_NAME || 'greenmarket');
-  console.log('  - User:', process.env.DB_USER || 'root');
+  // Railway provides DATABASE_URL, but we also support individual env vars
+  
+  let dbHost, dbPort, dbName, dbUser, dbPassword;
+  
+  // Try to parse DATABASE_URL first (Railway format)
+  if (process.env.DATABASE_URL) {
+    console.log('📋 Using DATABASE_URL environment variable');
+    // DATABASE_URL format: mysql://user:password@host:port/database
+    try {
+      const url = new URL(process.env.DATABASE_URL);
+      dbUser = url.username;
+      dbPassword = url.password;
+      dbHost = url.hostname;
+      dbPort = url.port || 3306;
+      dbName = url.pathname.slice(1); // Remove leading slash
+    } catch (err) {
+      console.error('❌ Failed to parse DATABASE_URL:', err.message);
+      dbHost = process.env.DB_HOST || 'localhost';
+      dbPort = process.env.DB_PORT || 3306;
+      dbName = process.env.DB_NAME || 'greenmarket';
+      dbUser = process.env.DB_USER || 'root';
+      dbPassword = process.env.DB_PASSWORD || '';
+    }
+  } else {
+    // Use individual environment variables
+    console.log('📋 Using individual database environment variables');
+    dbHost = process.env.DB_HOST || 'localhost';
+    dbPort = process.env.DB_PORT || 3306;
+    dbName = process.env.DB_NAME || 'greenmarket';
+    dbUser = process.env.DB_USER || 'root';
+    dbPassword = process.env.DB_PASSWORD || '';
+  }
+  
+  console.log('📋 Connecting to database:');
+  console.log('  - Host:', dbHost);
+  console.log('  - Port:', dbPort);
+  console.log('  - Database:', dbName);
+  console.log('  - User:', dbUser);
+  console.log('  - Password: ' + (dbPassword ? '***' : '(empty)'));
   
   const sequelize = new Sequelize(
-    process.env.DB_NAME || 'greenmarket',
-    process.env.DB_USER || 'root',
-    process.env.DB_PASSWORD || '',
+    dbName,
+    dbUser,
+    dbPassword,
     {
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 3306,
+      host: dbHost,
+      port: parseInt(dbPort),
       dialect: 'mysql',
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       pool: {
         max: 5,
         min: 0,
-        acquire: 60000, // Increased from 30000 to 60000ms
+        acquire: 60000,
         idle: 30000,
         evict: 15000
       },
