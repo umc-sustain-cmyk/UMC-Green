@@ -23,12 +23,25 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS configuration - must be FIRST before other middleware
-app.use(cors({
-  origin: ['https://umc-green.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = ['https://umc-green.vercel.app', 'http://localhost:5173', 'http://localhost:3000'];
+    // Allow requests with no origin (like mobile apps or server requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Security middleware - apply AFTER CORS
 app.use(helmet({
