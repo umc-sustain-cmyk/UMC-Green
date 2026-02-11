@@ -21,6 +21,12 @@ if (useSqliteInMemory) {
 
 } else {
   // Create Sequelize instance with MySQL connection for dev/prod and CI MySQL job
+  console.log('📋 Database config:');
+  console.log('  - Host:', process.env.DB_HOST || 'localhost');
+  console.log('  - Port:', process.env.DB_PORT || 3306);
+  console.log('  - Database:', process.env.DB_NAME || 'greenmarket');
+  console.log('  - User:', process.env.DB_USER || 'root');
+  
   const sequelize = new Sequelize(
     process.env.DB_NAME || 'greenmarket',
     process.env.DB_USER || 'root',
@@ -33,9 +39,9 @@ if (useSqliteInMemory) {
       pool: {
         max: 5,
         min: 0,
-        acquire: 30000,
-        idle: 30000, // Increased from 10000 to 30000ms to avoid premature disconnections
-        evict: 15000 // Evict idle connections after 15 seconds
+        acquire: 60000, // Increased from 30000 to 60000ms
+        idle: 30000,
+        evict: 15000
       },
       define: {
         timestamps: true,
