@@ -22,14 +22,17 @@ const sequelize = require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security middleware - apply FIRST before everything
-app.use(helmet());
-
-// CORS configuration - must be before routes
+// CORS configuration - must be FIRST before other middleware
 app.use(cors({
-  origin: '*',
+  origin: ['https://umc-green.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true
+}));
+
+// Security middleware - apply AFTER CORS
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
 // Rate limiting
