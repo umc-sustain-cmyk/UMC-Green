@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
-import { authAPI } from '../services/api';
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -37,11 +36,12 @@ function Login() {
     }
 
     try {
-      const response = await authAPI.login(formData);
+      const result = await login(formData.email, formData.password);
       
-      if (response.success) {
-        login(response.data.user, response.data.token);
+      if (result.success) {
         navigate('/dashboard');
+      } else {
+        setError(result.message || 'Invalid email or password. Please try again.');
       }
       
     } catch (err) {

@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff, Phone } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
-import { authAPI } from '../services/api';
 
 function Register() {
   const { login } = useContext(AuthContext);
@@ -78,7 +77,7 @@ function Register() {
     setError('');
 
     try {
-      const response = await authAPI.register({
+      const result = await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -87,24 +86,14 @@ function Register() {
         role: formData.role
       });
 
-      if (response.success) {
-        // Store token and user info
-        const token = response.data.token;
-        const user = response.data.user;
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        
-        // Update context
-        login(user, token);
+      if (result.success) {
         navigate('/dashboard');
+      } else {
+        setError(result.message || 'Registration failed. Please try again.');
       }
       
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 
-                          err.message ||
-                          'Registration failed. Please try again.';
-      setError(errorMessage);
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
