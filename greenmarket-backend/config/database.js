@@ -34,7 +34,8 @@ if (useSqliteInMemory) {
         max: 5,
         min: 0,
         acquire: 30000,
-        idle: 10000
+        idle: 30000, // Increased from 10000 to 30000ms to avoid premature disconnections
+        evict: 15000 // Evict idle connections after 15 seconds
       },
       define: {
         timestamps: true,

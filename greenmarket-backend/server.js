@@ -80,9 +80,26 @@ app.use((err, req, res, next) => {
 // Database connection and server startup
 const startServer = async () => {
   try {
-    // Test database connection
-    await sequelize.authenticate();
-    console.log('✅ Database connection established successfully');
+    // Test database connection with retry logic
+    let retries = 5;
+    let connected = false;
+    
+    while (retries > 0 && !connected) {
+      try {
+        await sequelize.authenticate();
+        console.log('✅ Database connection established successfully');
+        connected = true;
+      } catch (dbError) {
+        retries--;
+        if (retries > 0) {
+          const waitTime = (6 - retries) * 2000; // 2s, 4s, 6s, 8s, 10s
+          console.log(`⚠️ Database connection failed. Retrying in ${waitTime/1000}s... (${retries} attempts left)`);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+        } else {
+          throw dbError;
+        }
+      }
+    }
     
     // Migration strategy:
     // - In production, we do NOT call `sync()` here. Migrations should be applied during deploy.
