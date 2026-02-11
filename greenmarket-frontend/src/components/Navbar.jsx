@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Menu, X, User, ShoppingCart, Plus } from 'lucide-react';
+import { Menu, X, User, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
@@ -39,15 +39,12 @@ function Navbar() {
       <div className="container">
         <div className="flex-between" style={{ padding: '1rem 0' }}>
           {/* Logo */}
-          <Link to="/" className="flex gap-2" style={{ textDecoration: 'none' }}>
-            <Leaf size={32} color="var(--primary-green)" />
-            <span style={{
-              fontSize: '1.5rem',
-              fontWeight: 'bold',
-              color: 'var(--primary-green)'
-            }}>
-              GreenMarket
-            </span>
+          <Link to="/" className="flex gap-2" style={{ textDecoration: 'none', alignItems: 'center' }}>
+            <img 
+              src="/logo.png" 
+              alt="GreenMarket Logo" 
+              style={{ height: '48px', width: 'auto' }}
+            />
           </Link>
 
           {/* Desktop Navigation */}
