@@ -115,15 +115,15 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
             onClick={handleReserveItem}
             className="btn btn-primary"
             style={{ flex: 1 }}
-            disabled={!item.in_stock}
+            disabled={!item.isAvailable}
           >
             <Bookmark size={16} />
-            {item.in_stock ? 'Reserve Item' : 'Not Available'}
+            {item.isAvailable ? 'Reserve Item' : 'Not Available'}
           </button>
         </div>
 
         {/* Stock Status */}
-        {!item.in_stock && (
+        {!item.isAvailable && (
           <div style={{
             marginTop: '0.5rem',
             padding: '0.5rem',
