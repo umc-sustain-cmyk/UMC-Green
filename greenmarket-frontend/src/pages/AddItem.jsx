@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Package, Upload, DollarSign, Tag, Scale } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
+import { itemAPI } from '../services/api';
 
 function AddItem() {
   const { user, isAuthenticated } = useContext(AuthContext);
@@ -95,12 +96,33 @@ function AddItem() {
     setError('');
 
     try {
-      // TODO: Replace with actual API call
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock successful item creation
-      console.log('Item donated:', formData);
+      // Convert images to base64 strings
+      const imagePromises = formData.images.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const images = await Promise.all(imagePromises);
+
+      // Prepare data for API
+      const itemData = {
+        title: formData.name,
+        description: formData.description,
+        price: parseFloat(formData.price) || 0,
+        category: formData.category,
+        condition: formData.condition,
+        quantity: parseInt(formData.quantity) || 1,
+        unit: formData.unit,
+        images: images
+      };
+
+      // Send to API
+      const response = await itemAPI.createItem(itemData);
+      console.log('Item created:', response);
       
       setSuccess('Item donated successfully!');
       
@@ -122,7 +144,9 @@ function AddItem() {
       }, 2000);
       
     } catch (err) {
-      setError('Failed to donate item. Please try again.');
+      console.error('Error donating item:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to donate item. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
