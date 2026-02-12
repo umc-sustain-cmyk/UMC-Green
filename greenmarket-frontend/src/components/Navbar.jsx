@@ -10,15 +10,19 @@ function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Set initial state after component mounts (after CSS is loaded)
-    setIsMobile(window.innerWidth < 768);
+    // Use CSS media query instead of measuring window width
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    
+    // Set initial state
+    setIsMobile(mediaQuery.matches);
 
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+    // Listen for changes
+    const handleMediaChange = (e) => {
+      setIsMobile(e.matches);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    mediaQuery.addEventListener('change', handleMediaChange);
+    return () => mediaQuery.removeEventListener('change', handleMediaChange);
   }, []);
 
   const handleLogout = () => {
