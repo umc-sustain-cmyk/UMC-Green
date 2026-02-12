@@ -4,7 +4,7 @@ import { User, Mail, Lock, Eye, EyeOff, Phone } from 'lucide-react';
 import AuthContext from '../context/AuthContext';
 
 function Register() {
-  const { login } = useContext(AuthContext);
+  const { login, register } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
