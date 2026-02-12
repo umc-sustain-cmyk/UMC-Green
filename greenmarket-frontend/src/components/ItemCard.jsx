@@ -1,8 +1,10 @@
-import React from 'react';
-import { Heart, User, Bookmark } from 'lucide-react';
+import React, { useState } from 'react';
+import { Heart, User, Bookmark, Check } from 'lucide-react';
 import ImageCarousel from './ImageCarousel';
 
 function ItemCard({ item, onToggleFavorite, onReserveItem }) {
+  const [isReserved, setIsReserved] = useState(false);
+
   const handleToggleFavorite = () => {
     if (onToggleFavorite) {
       onToggleFavorite(item.id);
@@ -10,9 +12,14 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
   };
 
   const handleReserveItem = () => {
+    setIsReserved(true);
     if (onReserveItem) {
       onReserveItem(item);
     }
+    // Reset after 2 seconds
+    setTimeout(() => {
+      setIsReserved(false);
+    }, 2000);
   };
 
   // Handle both single image_url and multiple images array
@@ -113,12 +120,21 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
         <div className="flex gap-2">
           <button 
             onClick={handleReserveItem}
-            className="btn btn-primary"
+            className={isReserved ? "btn btn-success" : "btn btn-primary"}
             style={{ flex: 1 }}
-            disabled={!item.isAvailable}
+            disabled={!item.isAvailable || isReserved}
           >
-            <Bookmark size={16} />
-            {item.isAvailable ? 'Reserve Item' : 'Not Available'}
+            {isReserved ? (
+              <>
+                <Check size={16} />
+                Item Reserved!
+              </>
+            ) : (
+              <>
+                <Bookmark size={16} />
+                {item.isAvailable ? 'Reserve Item' : 'Not Available'}
+              </>
+            )}
           </button>
         </div>
 

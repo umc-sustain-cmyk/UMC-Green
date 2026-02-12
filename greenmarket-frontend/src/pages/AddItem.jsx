@@ -96,8 +96,33 @@ function AddItem() {
     setError('');
 
     try {
-      // For now, send empty images array (file upload will be implemented later)
-      // In future: implement proper file upload with multer/cloudinary
+      // Upload images to Cloudinary
+      const imageUrls = [];
+      for (const imageFile of formData.images) {
+        const cloudinaryData = new FormData();
+        cloudinaryData.append('file', imageFile);
+        cloudinaryData.append('upload_preset', 'greenmarket_unsigned');
+        
+        try {
+          const cloudinaryResponse = await fetch(
+            'https://api.cloudinary.com/v1_1/greenmarket/image/upload',
+            {
+              method: 'POST',
+              body: cloudinaryData
+            }
+          );
+          
+          if (cloudinaryResponse.ok) {
+            const data = await cloudinaryResponse.json();
+            imageUrls.push(data.secure_url);
+          }
+        } catch (uploadErr) {
+          console.error('Error uploading image to Cloudinary:', uploadErr);
+          // Continue without this image
+        }
+      }
+
+      // Prepare item data
       const itemData = {
         title: formData.name,
         description: formData.description,
@@ -106,7 +131,7 @@ function AddItem() {
         condition: formData.condition,
         quantity: parseInt(formData.quantity) || 1,
         unit: formData.unit,
-        images: [] // TODO: Implement file upload service
+        images: imageUrls // Upload image URLs
       };
 
       // Send to API
