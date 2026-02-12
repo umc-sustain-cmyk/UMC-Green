@@ -17,7 +17,7 @@ function AddItem() {
     condition: 'good',
     quantity: 1,
     unit: 'each',
-    image: null
+    images: []
   });
 
   // Redirect if not authenticated
@@ -27,12 +27,33 @@ function AddItem() {
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value
-    });
+    if (type === 'file') {
+      // Handle multiple file upload with max 3 images
+      const newFiles = Array.from(files);
+      const totalImages = formData.images.length + newFiles.length;
+      if (totalImages > 3) {
+        setError('Maximum 3 images allowed');
+        return;
+      }
+      setFormData({
+        ...formData,
+        images: [...formData.images, ...newFiles]
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value
+      });
+    }
     setError('');
     setSuccess('');
+  };
+
+  const removeImage = (index) => {
+    setFormData({
+      ...formData,
+      images: formData.images.filter((_, i) => i !== index)
+    });
   };
 
   const validateForm = () => {
@@ -50,6 +71,14 @@ function AddItem() {
     }
     if (!formData.condition) {
       setError('Item condition is required');
+      return false;
+    }
+    if (formData.images.length === 0) {
+      setError('At least 1 image is required');
+      return false;
+    }
+    if (formData.images.length > 3) {
+      setError('Maximum 3 images allowed');
       return false;
     }
     return true;
@@ -84,7 +113,7 @@ function AddItem() {
         condition: 'good',
         quantity: 1,
         unit: 'piece',
-        image: null
+        images: []
       });
 
       // Redirect after 2 seconds
@@ -239,9 +268,9 @@ function AddItem() {
               </div>
             </div>
 
-            {/* Product Image */}
+            {/* Product Images - Multiple */}
             <div className="form-group">
-              <label className="form-label">Item Image</label>
+              <label className="form-label">Item Images (1-3 required) *</label>
               <div style={{
                 border: '2px dashed var(--border-light)',
                 borderRadius: '8px',
@@ -250,13 +279,17 @@ function AddItem() {
                 position: 'relative'
               }}>
                 <Upload size={32} color="var(--text-light)" style={{ margin: '0 auto 1rem' }} />
-                <p style={{ color: 'var(--text-light)', margin: '0 0 1rem 0' }}>
-                  Click to upload or drag and drop your item image
+                <p style={{ color: 'var(--text-light)', margin: '0 0 0.5rem 0' }}>
+                  Click to upload or drag and drop item images
+                </p>
+                <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', margin: '0' }}>
+                  Max 3 images ({formData.images.length}/3)
                 </p>
                 <input
                   type="file"
-                  name="image"
+                  name="images"
                   accept="image/*"
+                  multiple
                   onChange={handleChange}
                   style={{
                     position: 'absolute',
@@ -267,13 +300,72 @@ function AddItem() {
                     opacity: 0,
                     cursor: 'pointer'
                   }}
+                  disabled={formData.images.length >= 3}
                 />
-                {formData.image && (
-                  <p style={{ color: 'var(--primary-green)', marginTop: '0.5rem' }}>
-                    Selected: {formData.image.name}
-                  </p>
-                )}
               </div>
+
+              {/* Preview selected images */}
+              {formData.images.length > 0 && (
+                <div style={{ marginTop: '1rem' }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', marginBottom: '0.5rem' }}>
+                    Selected images:
+                  </p>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                    gap: '0.5rem'
+                  }}>
+                    {formData.images.map((image, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          position: 'relative',
+                          paddingBottom: '100%',
+                          background: '#f0f0f0',
+                          borderRadius: '8px',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Preview ${index + 1}`}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          style={{
+                            position: 'absolute',
+                            top: '0.5rem',
+                            right: '0.5rem',
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '24px',
+                            height: '24px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '16px',
+                            padding: 0
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Item Condition */}

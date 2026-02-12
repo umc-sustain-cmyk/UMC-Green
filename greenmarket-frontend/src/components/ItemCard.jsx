@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, User, Bookmark } from 'lucide-react';
+import ImageCarousel from './ImageCarousel';
 
 function ItemCard({ item, onToggleFavorite, onReserveItem }) {
   const handleToggleFavorite = () => {
@@ -14,33 +15,25 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
     }
   };
 
+  // Handle both single image_url and multiple images array
+  const images = item.images && Array.isArray(item.images) 
+    ? item.images 
+    : (item.image_url ? [item.image_url] : []);
+
   return (
     <div className="card">
-      {/* Item Image */}
-      <div style={{
-        height: '200px',
-        background: item.image_url 
-          ? `url(${item.image_url})` 
-          : 'linear-gradient(135deg, var(--light-green), var(--accent-green))',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        borderRadius: '8px',
-        marginBottom: '1rem',
-        position: 'relative'
-      }}>
-        {!item.image_url && (
-          <div className="flex-center" style={{ height: '100%', color: 'white', fontSize: '3rem' }}>
-            �
-          </div>
-        )}
+      {/* Item Image Carousel */}
+      <div style={{ position: 'relative', marginBottom: '1rem' }}>
+        <ImageCarousel images={images} title={item.name} />
         
         {/* Condition Badge */}
         {item.condition && (
           <div className="badge badge-success" style={{
             position: 'absolute',
-            top: '0.5rem',
-            left: '0.5rem',
-            textTransform: 'capitalize'
+            top: '1rem',
+            left: '1rem',
+            textTransform: 'capitalize',
+            zIndex: 5
           }}>
             {item.condition}
           </div>
@@ -51,8 +44,8 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
           onClick={handleToggleFavorite}
           style={{
             position: 'absolute',
-            top: '0.5rem',
-            right: '0.5rem',
+            top: '1rem',
+            right: '1rem',
             background: 'rgba(255, 255, 255, 0.9)',
             border: 'none',
             borderRadius: '50%',
@@ -61,7 +54,8 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            zIndex: 5
           }}
         >
           <Heart size={16} color="var(--primary-green)" />
