@@ -60,10 +60,6 @@ function Dashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <a href="/add-item" className="btn btn-primary">
-            <Plus size={18} />
-            Donate Item
-          </a>
           <button className="btn btn-secondary">
             <Settings size={18} />
             Settings
