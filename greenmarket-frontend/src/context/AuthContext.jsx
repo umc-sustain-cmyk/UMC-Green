@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on app load
     const checkAuthStatus = async () => {
       const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
       
       if (token) {
         try {
@@ -26,9 +27,21 @@ export const AuthProvider = ({ children }) => {
           setUser(response.data.user);
         } catch (error) {
           console.error('Auth check failed:', error);
-          // Clear invalid token
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+          // Fallback: restore user from localStorage if available
+          if (storedUser) {
+            try {
+              setUser(JSON.parse(storedUser));
+            } catch (parseError) {
+              console.error('Failed to parse stored user:', parseError);
+              // Clear invalid data
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+            }
+          } else {
+            // Clear invalid token
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
         }
       }
       
