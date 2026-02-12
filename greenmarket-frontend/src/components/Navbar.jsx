@@ -7,9 +7,12 @@ function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Set initial state after component mounts (after CSS is loaded)
+    setIsMobile(window.innerWidth < 768);
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
