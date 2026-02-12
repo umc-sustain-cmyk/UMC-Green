@@ -96,19 +96,8 @@ function AddItem() {
     setError('');
 
     try {
-      // Convert images to base64 strings
-      const imagePromises = formData.images.map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      });
-
-      const images = await Promise.all(imagePromises);
-
-      // Prepare data for API
+      // For now, send empty images array (file upload will be implemented later)
+      // In future: implement proper file upload with multer/cloudinary
       const itemData = {
         title: formData.name,
         description: formData.description,
@@ -117,7 +106,7 @@ function AddItem() {
         condition: formData.condition,
         quantity: parseInt(formData.quantity) || 1,
         unit: formData.unit,
-        images: images
+        images: [] // TODO: Implement file upload service
       };
 
       // Send to API
