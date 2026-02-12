@@ -111,6 +111,55 @@ router.get('/', [
   }
 });
 
+// @route   GET /api/items/user/:userId
+// @desc    Get items by user ID
+// @access  Public
+router.get('/user/:userId', optionalAuth, async (req, res) => {
+  try {
+    const { page = 1, limit = 12 } = req.query;
+
+    const where = { userId: req.params.userId };
+    
+    // Only show available items unless viewing own items
+    if (!req.user || req.user.id !== parseInt(req.params.userId)) {
+      where.isAvailable = true;
+    }
+
+    const items = await Item.findAndCountAll({
+      where,
+      include: [{
+        model: User,
+        as: 'donor',
+        attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+      }],
+      limit: parseInt(limit),
+      offset: (parseInt(page) - 1) * parseInt(limit),
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({
+      success: true,
+      data: {
+        items: items.rows,
+        pagination: {
+          current: parseInt(page),
+          total: Math.ceil(items.count / parseInt(limit)),
+          count: items.count,
+          limit: parseInt(limit)
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Get user items error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error getting user items',
+      error: error.message
+    });
+  }
+});
+
 // @route   GET /api/items/:id
 // @desc    Get single item by ID
 // @access  Public
@@ -411,54 +460,6 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error deleting item'
-    });
-  }
-});
-
-// @route   GET /api/items/user/:userId
-// @desc    Get items by user ID
-// @access  Public
-router.get('/user/:userId', optionalAuth, async (req, res) => {
-  try {
-    const { page = 1, limit = 12 } = req.query;
-
-    const where = { userId: req.params.userId };
-    
-    // Only show available items unless viewing own items
-    if (!req.user || req.user.id !== parseInt(req.params.userId)) {
-      where.isAvailable = true;
-    }
-
-    const items = await Item.findAndCountAll({
-      where,
-      include: [{
-        model: User,
-        as: 'donor',
-        attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-      }],
-      limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
-      order: [['createdAt', 'DESC']]
-    });
-
-    res.json({
-      success: true,
-      data: {
-        items: items.rows,
-        pagination: {
-          current: parseInt(page),
-          total: Math.ceil(items.count / parseInt(limit)),
-          count: items.count,
-          limit: parseInt(limit)
-        }
-      }
-    });
-
-  } catch (error) {
-    console.error('Get user items error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error getting user items'
     });
   }
 });
