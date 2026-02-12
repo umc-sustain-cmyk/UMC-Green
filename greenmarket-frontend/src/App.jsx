@@ -18,7 +18,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-          <main style={{ minHeight: 'calc(100vh - 140px)' }}>
+          <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/marketplace" element={<Marketplace />} />
