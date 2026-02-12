@@ -106,7 +106,8 @@ router.get('/', [
     console.error('Get items error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting items'
+      message: 'Server error getting items',
+      error: error.message
     });
   }
 });
