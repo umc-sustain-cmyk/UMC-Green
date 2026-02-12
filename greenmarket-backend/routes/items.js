@@ -75,6 +75,9 @@ router.get('/', [
 
     const items = await Item.findAndCountAll({
       where,
+      attributes: {
+        exclude: ['images'] // Exclude from list queries - keep bandwidth low
+      },
       include: [{
         model: User,
         as: 'donor',
