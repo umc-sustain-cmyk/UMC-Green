@@ -81,20 +81,23 @@ router.get('/', [
           model: User,
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-        },
-        {
-          model: ItemImage,
-          as: 'itemImages',
-          attributes: ['id', 'url', 'displayOrder'],
-          order: [['displayOrder', 'ASC']],
-          required: false
         }
+        // IMPORTANT: Do NOT include itemImages in main query - causes sort memory error
+        // when multiple images per item are joined and then sorted
       ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
       order: [[orderField, orderDirection]],
       distinct: true
     });
+
+    // Fetch images separately for each item to avoid sort memory issues
+    for (let item of items.rows) {
+      item.itemImages = await item.getItemImages({
+        attributes: ['id', 'url', 'displayOrder'],
+        order: [['displayOrder', 'ASC']]
+      });
+    }
 
     res.json({
       success: true,
@@ -143,19 +146,21 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
           model: User,
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-        },
-        {
-          model: ItemImage,
-          as: 'itemImages',
-          attributes: ['id', 'url', 'displayOrder'],
-          order: [['displayOrder', 'ASC']],
-          required: false
         }
+        // IMPORTANT: Do NOT include itemImages in main query - causes sort memory error
       ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
       order: [['createdAt', 'DESC']]
     });
+
+    // Fetch images separately for each item to avoid sort memory issues
+    for (let item of items.rows) {
+      item.itemImages = await item.getItemImages({
+        attributes: ['id', 'url', 'displayOrder'],
+        order: [['displayOrder', 'ASC']]
+      });
+    }
 
     res.json({
       success: true,
@@ -191,13 +196,6 @@ router.get('/:id', optionalAuth, async (req, res) => {
           model: User,
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-        },
-        {
-          model: ItemImage,
-          as: 'itemImages',
-          attributes: ['id', 'url', 'displayOrder'],
-          order: [['displayOrder', 'ASC']],
-          required: false
         }
       ]
     });
@@ -208,6 +206,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
         message: 'Item not found'
       });
     }
+
+    // Fetch images separately
+    item.itemImages = await item.getItemImages({
+      attributes: ['id', 'url', 'displayOrder'],
+      order: [['displayOrder', 'ASC']]
+    });
 
     // Increment view count if not the owner
     if (!req.user || req.user.id !== item.userId) {
