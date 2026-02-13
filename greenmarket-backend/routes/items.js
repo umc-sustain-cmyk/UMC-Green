@@ -201,10 +201,6 @@ router.get('/:id', optionalAuth, async (req, res) => {
         }
       ]
     });
-        as: 'donor',
-        attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'phone']
-      }]
-    });
 
     if (!item) {
       return res.status(404).json({

@@ -3,14 +3,9 @@
 
 module.exports = function setupAssociations() {
   const Item = require('./Item');
-  const User = require('./User');
   const ItemImage = require('./ItemImage');
 
-  // Item - User relationships
-  User.hasMany(Item, { foreignKey: 'userId', as: 'donations' });
-  Item.belongsTo(User, { foreignKey: 'userId', as: 'donor' });
-
-  // Item - ItemImage relationships
+  // Item - ItemImage relationships (User-Item already defined in Item.js)
   Item.hasMany(ItemImage, { 
     foreignKey: 'itemId', 
     as: 'itemImages',
