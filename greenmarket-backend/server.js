@@ -165,10 +165,16 @@ const startServer = async () => {
     }
     
     // Start server
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
       console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
+    });
+
+    // Handle server errors
+    server.on('error', (err) => {
+      console.error('❌ Server error:', err);
+      process.exit(1);
     });
     
   } catch (error) {
@@ -183,6 +189,17 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// Global error handlers (should be near the end, before startServer call)
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 // Only start the server when not running tests. Tests will import `app` directly.
 console.log('🔧 Checking if server should start (NODE_ENV=' + process.env.NODE_ENV + ')...');
