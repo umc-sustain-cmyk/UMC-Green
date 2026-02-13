@@ -75,9 +75,6 @@ router.get('/', [
     const orderDirection = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
     const items = await Item.findAndCountAll({
-      attributes: {
-        exclude: ['images'] // Exclude old JSON images column - we fetch from item_images table instead
-      },
       where,
       include: [
         {
@@ -168,9 +165,6 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
     }
 
     const items = await Item.findAndCountAll({
-      attributes: {
-        exclude: ['images'] // Exclude old JSON images column
-      },
       where,
       include: [
         {
@@ -246,9 +240,6 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const item = await Item.findByPk(req.params.id, {
-      attributes: {
-        exclude: ['images'] // Exclude old JSON images column
-      },
       include: [
         {
           model: User,

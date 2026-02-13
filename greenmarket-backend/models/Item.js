@@ -50,11 +50,7 @@ const Item = sequelize.define('Item', {
     type: DataTypes.ENUM('new', 'like-new', 'good', 'fair', 'poor'),
     allowNull: false
   },
-  images: {
-    type: DataTypes.JSON,
-    allowNull: true,
-    defaultValue: []
-  },
+  // NOTE: images column has been removed - use ItemImage model and item_images table instead
   isAvailable: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
