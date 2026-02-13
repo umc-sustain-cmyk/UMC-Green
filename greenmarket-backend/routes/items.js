@@ -92,10 +92,26 @@ router.get('/', [
     });
 
     // Fetch images separately for each item to avoid sort memory issues
-    for (let item of items.rows) {
-      item.itemImages = await item.getItemImages({
-        attributes: ['id', 'url', 'displayOrder'],
-        order: [['displayOrder', 'ASC']]
+    const itemIds = items.rows.map(item => item.id);
+    if (itemIds.length > 0) {
+      const images = await ItemImage.findAll({
+        where: { itemId: itemIds },
+        order: [['displayOrder', 'ASC']],
+        raw: true
+      });
+
+      // Group images by itemId
+      const imagesByItemId = {};
+      images.forEach(img => {
+        if (!imagesByItemId[img.itemId]) {
+          imagesByItemId[img.itemId] = [];
+        }
+        imagesByItemId[img.itemId].push(img);
+      });
+
+      // Attach images to items
+      items.rows.forEach(item => {
+        item.itemImages = imagesByItemId[item.id] || [];
       });
     }
 
@@ -155,10 +171,26 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
     });
 
     // Fetch images separately for each item to avoid sort memory issues
-    for (let item of items.rows) {
-      item.itemImages = await item.getItemImages({
-        attributes: ['id', 'url', 'displayOrder'],
-        order: [['displayOrder', 'ASC']]
+    const userItemIds = items.rows.map(item => item.id);
+    if (userItemIds.length > 0) {
+      const userImages = await ItemImage.findAll({
+        where: { itemId: userItemIds },
+        order: [['displayOrder', 'ASC']],
+        raw: true
+      });
+
+      // Group images by itemId
+      const userImagesByItemId = {};
+      userImages.forEach(img => {
+        if (!userImagesByItemId[img.itemId]) {
+          userImagesByItemId[img.itemId] = [];
+        }
+        userImagesByItemId[img.itemId].push(img);
+      });
+
+      // Attach images to items
+      items.rows.forEach(item => {
+        item.itemImages = userImagesByItemId[item.id] || [];
       });
     }
 
@@ -208,10 +240,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
     }
 
     // Fetch images separately
-    item.itemImages = await item.getItemImages({
-      attributes: ['id', 'url', 'displayOrder'],
-      order: [['displayOrder', 'ASC']]
+    const itemImageList = await ItemImage.findAll({
+      where: { itemId: item.id },
+      order: [['displayOrder', 'ASC']],
+      raw: true
     });
+    item.itemImages = itemImageList;
 
     // Increment view count if not the owner
     if (!req.user || req.user.id !== item.userId) {
