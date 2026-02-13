@@ -92,27 +92,36 @@ router.get('/', [
     });
 
     // Fetch images separately for each item to avoid sort memory issues
-    const itemIds = items.rows.map(item => item.id);
+    console.log(`📸 Fetching images for ${itemIds.length} items...`);
     if (itemIds.length > 0) {
-      const images = await ItemImage.findAll({
-        where: { itemId: itemIds },
-        order: [['displayOrder', 'ASC']],
-        raw: true
-      });
+      try {
+        const images = await ItemImage.findAll({
+          where: { itemId: itemIds },
+          order: [['displayOrder', 'ASC']],
+          raw: true
+        });
+        console.log(`✅ Found ${images.length} images total`);
 
-      // Group images by itemId
-      const imagesByItemId = {};
-      images.forEach(img => {
-        if (!imagesByItemId[img.itemId]) {
-          imagesByItemId[img.itemId] = [];
-        }
-        imagesByItemId[img.itemId].push(img);
-      });
+        // Group images by itemId
+        const imagesByItemId = {};
+        images.forEach(img => {
+          if (!imagesByItemId[img.itemId]) {
+            imagesByItemId[img.itemId] = [];
+          }
+          imagesByItemId[img.itemId].push(img);
+        });
 
-      // Attach images to items
-      items.rows.forEach(item => {
-        item.itemImages = imagesByItemId[item.id] || [];
-      });
+        // Attach images to items
+        items.rows.forEach(item => {
+          item.itemImages = imagesByItemId[item.id] || [];
+        });
+      } catch (imgError) {
+        console.error('❌ Error fetching images:', imgError);
+        // Continue without images rather than crashing
+        items.rows.forEach(item => {
+          item.itemImages = [];
+        });
+      }
     }
 
     res.json({
@@ -171,27 +180,35 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
     });
 
     // Fetch images separately for each item to avoid sort memory issues
-    const userItemIds = items.rows.map(item => item.id);
+    console.log(`📸 Fetching images for user items... ${userItemIds.length} items`);
     if (userItemIds.length > 0) {
-      const userImages = await ItemImage.findAll({
-        where: { itemId: userItemIds },
-        order: [['displayOrder', 'ASC']],
-        raw: true
-      });
+      try {
+        const userImages = await ItemImage.findAll({
+          where: { itemId: userItemIds },
+          order: [['displayOrder', 'ASC']],
+          raw: true
+        });
+        console.log(`✅ Found ${userImages.length} images for user items`);
 
-      // Group images by itemId
-      const userImagesByItemId = {};
-      userImages.forEach(img => {
-        if (!userImagesByItemId[img.itemId]) {
-          userImagesByItemId[img.itemId] = [];
-        }
-        userImagesByItemId[img.itemId].push(img);
-      });
+        // Group images by itemId
+        const userImagesByItemId = {};
+        userImages.forEach(img => {
+          if (!userImagesByItemId[img.itemId]) {
+            userImagesByItemId[img.itemId] = [];
+          }
+          userImagesByItemId[img.itemId].push(img);
+        });
 
-      // Attach images to items
-      items.rows.forEach(item => {
-        item.itemImages = userImagesByItemId[item.id] || [];
-      });
+        // Attach images to items
+        items.rows.forEach(item => {
+          item.itemImages = userImagesByItemId[item.id] || [];
+        });
+      } catch (imgError) {
+        console.error('❌ Error fetching user images:', imgError);
+        items.rows.forEach(item => {
+          item.itemImages = [];
+        });
+      }
     }
 
     res.json({
@@ -240,12 +257,19 @@ router.get('/:id', optionalAuth, async (req, res) => {
     }
 
     // Fetch images separately
-    const itemImageList = await ItemImage.findAll({
-      where: { itemId: item.id },
-      order: [['displayOrder', 'ASC']],
-      raw: true
-    });
-    item.itemImages = itemImageList;
+    console.log(`📸 Fetching images for item ${item.id}...`);
+    try {
+      const itemImageList = await ItemImage.findAll({
+        where: { itemId: item.id },
+        order: [['displayOrder', 'ASC']],
+        raw: true
+      });
+      item.itemImages = itemImageList;
+      console.log(`✅ Found ${itemImageList.length} images for item ${item.id}`);
+    } catch (imgError) {
+      console.error(`❌ Error fetching images for item ${item.id}:`, imgError);
+      item.itemImages = [];
+    }
 
     // Increment view count if not the owner
     if (!req.user || req.user.id !== item.userId) {
