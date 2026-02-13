@@ -84,8 +84,6 @@ router.get('/', [
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
         }
-        // IMPORTANT: Do NOT include itemImages in main query - causes sort memory error
-        // when multiple images per item are joined and then sorted
       ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
@@ -144,7 +142,6 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
         }
-        // IMPORTANT: Do NOT include itemImages in main query - causes sort memory error
       ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
@@ -197,21 +194,6 @@ router.get('/:id', optionalAuth, async (req, res) => {
         success: false,
         message: 'Item not found'
       });
-    }
-
-    // Fetch images separately
-    console.log(`📸 Fetching images for item ${item.id}...`);
-    try {
-      const itemImageList = await ItemImage.findAll({
-        where: { itemId: item.id },
-        order: [['displayOrder', 'ASC']],
-        raw: true
-      });
-      item.itemImages = itemImageList;
-      console.log(`✅ Found ${itemImageList.length} images for item ${item.id}`);
-    } catch (imgError) {
-      console.error(`❌ Error fetching images for item ${item.id}:`, imgError);
-      item.itemImages = [];
     }
 
     // Increment view count if not the owner
@@ -322,12 +304,6 @@ router.post('/', [
           as: 'donor',
           attributes: ['id', 'firstName', 'lastName', 'email', 'role']
         },
-        {
-          model: ItemImage,
-          as: 'itemImages',
-          attributes: ['id', 'url', 'displayOrder'],
-          order: [['displayOrder', 'ASC']]
-        }
       ]
     });
 
