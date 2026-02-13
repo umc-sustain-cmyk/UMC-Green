@@ -75,6 +75,9 @@ router.get('/', [
 
     const items = await Item.findAndCountAll({
       where,
+      attributes: {
+        exclude: ['images'] // Exclude large images field from list - fetch separately if needed
+      },
       include: [{
         model: User,
         as: 'donor',
