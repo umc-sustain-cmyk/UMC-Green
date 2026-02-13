@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Heart, User, Bookmark, Check, Image as ImageIcon } from 'lucide-react';
 
 function ItemCard({ item, onToggleFavorite, onReserveItem }) {
@@ -22,7 +23,20 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
   };
 
   return (
-    <div className="card">
+    <Link 
+      to={`/items/${item.id}`}
+      style={{ textDecoration: 'none', color: 'inherit' }}
+    >
+      <div className="card" style={{ cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        }}
+      >
       {/* Placeholder for images (disabled for now) */}
       <div style={{ 
         position: 'relative', 
@@ -122,7 +136,10 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
         {/* Actions */}
         <div className="flex gap-2">
           <button 
-            onClick={handleReserveItem}
+            onClick={(e) => {
+              e.preventDefault();
+              handleReserveItem();
+            }}
             className={isReserved ? "btn btn-success" : "btn btn-primary"}
             style={{ flex: 1 }}
             disabled={!item.isAvailable || isReserved}
@@ -157,6 +174,7 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
         )}
       </div>
     </div>
+    </Link>
   );
 }
 
