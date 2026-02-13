@@ -3,7 +3,6 @@ const { body, validationResult, query } = require('express-validator');
 const { Op } = require('sequelize');
 const Item = require('../models/Item');
 const User = require('../models/User');
-const ItemImage = require('../models/ItemImage');
 const { auth, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -94,39 +93,6 @@ router.get('/', [
       distinct: true
     });
 
-    // Fetch images separately for each item to avoid sort memory issues
-    console.log(`📸 Fetching images for ${itemIds.length} items...`);
-    if (itemIds.length > 0) {
-      try {
-        const images = await ItemImage.findAll({
-          where: { itemId: itemIds },
-          order: [['displayOrder', 'ASC']],
-          raw: true
-        });
-        console.log(`✅ Found ${images.length} images total`);
-
-        // Group images by itemId
-        const imagesByItemId = {};
-        images.forEach(img => {
-          if (!imagesByItemId[img.itemId]) {
-            imagesByItemId[img.itemId] = [];
-          }
-          imagesByItemId[img.itemId].push(img);
-        });
-
-        // Attach images to items
-        items.rows.forEach(item => {
-          item.itemImages = imagesByItemId[item.id] || [];
-        });
-      } catch (imgError) {
-        console.error('❌ Error fetching images:', imgError);
-        // Continue without images rather than crashing
-        items.rows.forEach(item => {
-          item.itemImages = [];
-        });
-      }
-    }
-
     res.json({
       success: true,
       data: {
@@ -184,38 +150,6 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
       offset: (parseInt(page) - 1) * parseInt(limit),
       order: [['createdAt', 'DESC']]
     });
-
-    // Fetch images separately for each item to avoid sort memory issues
-    console.log(`📸 Fetching images for user items... ${userItemIds.length} items`);
-    if (userItemIds.length > 0) {
-      try {
-        const userImages = await ItemImage.findAll({
-          where: { itemId: userItemIds },
-          order: [['displayOrder', 'ASC']],
-          raw: true
-        });
-        console.log(`✅ Found ${userImages.length} images for user items`);
-
-        // Group images by itemId
-        const userImagesByItemId = {};
-        userImages.forEach(img => {
-          if (!userImagesByItemId[img.itemId]) {
-            userImagesByItemId[img.itemId] = [];
-          }
-          userImagesByItemId[img.itemId].push(img);
-        });
-
-        // Attach images to items
-        items.rows.forEach(item => {
-          item.itemImages = userImagesByItemId[item.id] || [];
-        });
-      } catch (imgError) {
-        console.error('❌ Error fetching user images:', imgError);
-        items.rows.forEach(item => {
-          item.itemImages = [];
-        });
-      }
-    }
 
     res.json({
       success: true,

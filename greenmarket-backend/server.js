@@ -69,8 +69,7 @@ app.use(express.urlencoded({ extended: true }));
 
 console.log('🔧 Loading routes...');
 try {
-  // Set up model associations BEFORE loading routes
-  require('./models/associations')();
+  // Note: ItemImage associations removed (images feature disabled)
   
   app.use('/api/auth', require('./routes/auth'));
   console.log('✅ Auth routes loaded');

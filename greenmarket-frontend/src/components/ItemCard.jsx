@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, User, Bookmark, Check } from 'lucide-react';
-import ImageCarousel from './ImageCarousel';
+import { Heart, User, Bookmark, Check, Image as ImageIcon } from 'lucide-react';
 
 function ItemCard({ item, onToggleFavorite, onReserveItem }) {
   const [isReserved, setIsReserved] = useState(false);
@@ -22,27 +21,20 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
     }, 2000);
   };
 
-  // Handle both old images array and new itemImages array
-  let images = [];
-  if (item.itemImages && Array.isArray(item.itemImages)) {
-    // New structure: itemImages array of objects with url property
-    images = item.itemImages
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map(img => img.url)
-      .filter(url => url);
-  } else if (item.images && Array.isArray(item.images)) {
-    // Old structure: images array of URLs
-    images = item.images.filter(img => img);
-  } else if (item.image_url) {
-    // Fallback: single image_url
-    images = [item.image_url];
-  }
-
   return (
     <div className="card">
-      {/* Item Image Carousel */}
-      <div style={{ position: 'relative', marginBottom: '1rem' }}>
-        <ImageCarousel images={images} title={item.name} />
+      {/* Placeholder for images (disabled for now) */}
+      <div style={{ 
+        position: 'relative', 
+        marginBottom: '1rem',
+        backgroundColor: '#f0f0f0',
+        height: '200px',
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <ImageIcon size={48} color="#ccc" />
         
         {/* Condition Badge */}
         {item.condition && (
@@ -83,7 +75,7 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
       {/* Item Info */}
       <div>
         <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>
-          {item.name}
+          {item.title || item.name}
         </h3>
         
         <p style={{ 
