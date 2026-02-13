@@ -75,6 +75,9 @@ router.get('/', [
 
     const items = await Item.findAndCountAll({
       where,
+      attributes: {
+        exclude: ['images'] // Exclude large images field - prevents sort memory error on Railway
+      },
       include: [{
         model: User,
         as: 'donor',
