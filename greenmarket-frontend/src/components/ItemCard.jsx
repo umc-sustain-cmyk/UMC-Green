@@ -22,10 +22,21 @@ function ItemCard({ item, onToggleFavorite, onReserveItem }) {
     }, 2000);
   };
 
-  // Handle both single image_url and multiple images array
-  const images = item.images && Array.isArray(item.images) 
-    ? item.images 
-    : (item.image_url ? [item.image_url] : []);
+  // Handle both old images array and new itemImages array
+  let images = [];
+  if (item.itemImages && Array.isArray(item.itemImages)) {
+    // New structure: itemImages array of objects with url property
+    images = item.itemImages
+      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+      .map(img => img.url)
+      .filter(url => url);
+  } else if (item.images && Array.isArray(item.images)) {
+    // Old structure: images array of URLs
+    images = item.images.filter(img => img);
+  } else if (item.image_url) {
+    // Fallback: single image_url
+    images = [item.image_url];
+  }
 
   return (
     <div className="card">

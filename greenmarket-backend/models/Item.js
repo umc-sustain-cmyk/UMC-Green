@@ -112,6 +112,10 @@ const Item = sequelize.define('Item', {
 User.hasMany(Item, { foreignKey: 'userId', as: 'donations' });
 Item.belongsTo(User, { foreignKey: 'userId', as: 'donor' });
 
+// ItemImage association - will be defined after ItemImage model is loaded
+// Item.hasMany(ItemImage, { foreignKey: 'itemId', as: 'itemImages', onDelete: 'CASCADE' });
+// ItemImage.belongsTo(Item, { foreignKey: 'itemId' });
+
 // Instance methods
 Item.prototype.incrementViewCount = async function() {
   this.viewCount += 1;

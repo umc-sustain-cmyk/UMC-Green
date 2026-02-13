@@ -3,6 +3,7 @@ const { body, validationResult, query } = require('express-validator');
 const { Op } = require('sequelize');
 const Item = require('../models/Item');
 const User = require('../models/User');
+const ItemImage = require('../models/ItemImage');
 const { auth, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
@@ -75,14 +76,20 @@ router.get('/', [
 
     const items = await Item.findAndCountAll({
       where,
-      attributes: {
-        exclude: ['images'] // Exclude large images field - prevents sort memory error on Railway
-      },
-      include: [{
-        model: User,
-        as: 'donor',
-        attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-      }],
+      include: [
+        {
+          model: User,
+          as: 'donor',
+          attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+        },
+        {
+          model: ItemImage,
+          as: 'itemImages',
+          attributes: ['id', 'url', 'displayOrder'],
+          order: [['displayOrder', 'ASC']],
+          required: false
+        }
+      ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
       order: [[orderField, orderDirection]],
@@ -131,11 +138,20 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
 
     const items = await Item.findAndCountAll({
       where,
-      include: [{
-        model: User,
-        as: 'donor',
-        attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-      }],
+      include: [
+        {
+          model: User,
+          as: 'donor',
+          attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+        },
+        {
+          model: ItemImage,
+          as: 'itemImages',
+          attributes: ['id', 'url', 'displayOrder'],
+          order: [['displayOrder', 'ASC']],
+          required: false
+        }
+      ],
       limit: parseInt(limit),
       offset: (parseInt(page) - 1) * parseInt(limit),
       order: [['createdAt', 'DESC']]
@@ -170,8 +186,21 @@ router.get('/user/:userId', optionalAuth, async (req, res) => {
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const item = await Item.findByPk(req.params.id, {
-      include: [{
-        model: User,
+      include: [
+        {
+          model: User,
+          as: 'donor',
+          attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+        },
+        {
+          model: ItemImage,
+          as: 'itemImages',
+          attributes: ['id', 'url', 'displayOrder'],
+          order: [['displayOrder', 'ASC']],
+          required: false
+        }
+      ]
+    });
         as: 'donor',
         attributes: ['id', 'firstName', 'lastName', 'email', 'role', 'phone']
       }]
@@ -268,20 +297,37 @@ router.post('/', [
       price,
       category,
       condition,
-      images,
       tags,
       location,
       contactMethod,
       userId: req.user.id
     });
 
-    // Fetch the item with donor info
+    // Create image records if images are provided
+    if (images && Array.isArray(images) && images.length > 0) {
+      const imageRecords = images.map((url, index) => ({
+        itemId: item.id,
+        url,
+        displayOrder: index
+      }));
+      await ItemImage.bulkCreate(imageRecords);
+    }
+
+    // Fetch the item with donor info and images
     const itemWithDonor = await Item.findByPk(item.id, {
-      include: [{
-        model: User,
-        as: 'donor',
-        attributes: ['id', 'firstName', 'lastName', 'email', 'role']
-      }]
+      include: [
+        {
+          model: User,
+          as: 'donor',
+          attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+        },
+        {
+          model: ItemImage,
+          as: 'itemImages',
+          attributes: ['id', 'url', 'displayOrder'],
+          order: [['displayOrder', 'ASC']]
+        }
+      ]
     });
 
     res.status(201).json({

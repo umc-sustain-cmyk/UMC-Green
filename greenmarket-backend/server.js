@@ -69,6 +69,9 @@ app.use(express.urlencoded({ extended: true }));
 
 console.log('🔧 Loading routes...');
 try {
+  // Set up model associations BEFORE loading routes
+  require('./models/associations')();
+  
   app.use('/api/auth', require('./routes/auth'));
   console.log('✅ Auth routes loaded');
   app.use('/api/users', require('./routes/users'));
