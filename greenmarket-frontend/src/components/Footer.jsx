@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 function Footer() {
   return (
@@ -13,7 +13,7 @@ function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex gap-2 mb-3">
-              <Leaf size={24} color="var(--accent-green)" />
+              <img src="/logo.png" alt="GreenMarket Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
               <h3 style={{ color: 'white', margin: 0 }}>GreenMarket</h3>
             </div>
             <p style={{ color: '#ccc', lineHeight: '1.6' }}>
