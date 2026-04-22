@@ -36,7 +36,7 @@ function Home() {
 
   const features = [
     {
-      icon: <span style={{ fontSize: '3rem' }}>🌱</span>,
+      icon: <Leaf size={48} color="var(--accent-green)" />,
       title: "100% Donations",
       description: "Share items donated by students and faculty within our community"
     },
@@ -80,9 +80,10 @@ function Home() {
         backgroundImage: 'url(/DonateLanding.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
         color: 'white',
-        padding: '4rem 0',
-        position: 'relative'
+        padding: '4rem 0'
       }}>
         <div style={{
           position: 'absolute',
@@ -90,17 +91,25 @@ function Home() {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.15)',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
           zIndex: 1
         }}></div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ maxWidth: '50%' }}>
+          <div className="grid grid-2" style={{ alignItems: 'center' }}>
             <div>
-              <h1 style={{ color: 'white', fontSize: '3rem', marginBottom: '1.5rem', textShadow: '1px 1px 3px rgba(0, 0, 0, 0.4)' }}>
+              <h1 style={{
+                color: 'white',
+                fontSize: '3rem',
+                marginBottom: '1.5rem'
+              }}>
                 Welcome to GreenMarket:
-                <span style={{ color: 'var(--accent-green)' }}> Campus Giving & Sharing</span>
+                <span style={{ color: 'white' }}> Campus Giving & Sharing</span>
               </h1>
-              <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)' }}>
+              <p style={{
+                fontSize: '1.2rem',
+                marginBottom: '2rem',
+                lineHeight: '1.6'
+              }}>
                 Donate items you no longer need and receive items from our community. 
                 GreenMarket connects UMN Crookston students and faculty to reduce waste 
                 and support each other. Share with purpose, live sustainably.
@@ -119,9 +128,12 @@ function Home() {
                 </Link>
               </div>
             </div>
+            <div></div>
           </div>
         </div>
-      </section>      {/* Features Section */}
+      </section>
+
+      {/* Features Section */}
       <section className="section" style={{ background: 'var(--bg-light)' }}>
         <div className="container">
           <div className="text-center mb-4">
