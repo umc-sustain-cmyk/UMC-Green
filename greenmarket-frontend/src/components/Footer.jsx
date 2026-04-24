@@ -18,7 +18,7 @@ function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex gap-2 mb-3">
-              <img src="/logo.png" alt="GreenMarket Logo" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+              <img src="/logo.png" alt="GreenMarket Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
               <h3 style={{ color: 'white', margin: 0 }}>GreenMarket</h3>
             </div>
             <p style={{ color: '#ccc', lineHeight: '1.6' }}>
