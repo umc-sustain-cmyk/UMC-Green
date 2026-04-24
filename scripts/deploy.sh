@@ -39,6 +39,12 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 BACKEND_DIR="$PROJECT_DIR/greenmarket-backend"
 FRONTEND_DIR="$PROJECT_DIR/greenmarket-frontend"
 
+# Vite 5 requires Node.js 18+. Fail fast with a clear message if the server is older.
+NODE_MAJOR_VERSION="$(node -v | sed 's/^v//' | cut -d. -f1)"
+if [ "$NODE_MAJOR_VERSION" -lt 18 ]; then
+    print_error "Node.js 18+ is required for the frontend build. Current version: $(node -v). Run scripts/setup-redhat.sh or upgrade Node.js on the server, then rerun this script."
+fi
+
 print_info "Project directory: $PROJECT_DIR"
 
 # Check if backend exists
