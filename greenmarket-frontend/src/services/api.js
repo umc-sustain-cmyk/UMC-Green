@@ -100,3 +100,5 @@ export const healthAPI = {
     return response.data;
   }
 };
+
+export default api;

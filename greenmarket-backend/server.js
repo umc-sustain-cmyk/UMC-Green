@@ -28,11 +28,22 @@ console.log('✅ Database configuration loaded');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const frontendUrl = (process.env.FRONTEND_URL || '').replace(/\/$/, '');
 
 // CORS configuration - must be FIRST before other middleware
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = ['https://umc-green.vercel.app', 'http://localhost:5173', 'http://localhost:3000'];
+    const allowedOrigins = [
+      'https://umc-green.vercel.app',
+      'https://umc-green-project-prd-app-01.oit.umn.edu',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ];
+
+    if (frontendUrl) {
+      allowedOrigins.push(frontendUrl);
+    }
+
     // Allow requests with no origin (like mobile apps or server requests)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
