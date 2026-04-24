@@ -77,18 +77,39 @@ function Home() {
     <div>
       {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, var(--primary-green), var(--light-green))',
+        backgroundImage: 'url(/DonateLanding.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
         color: 'white',
         padding: '4rem 0'
       }}>
-        <div className="container">
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          zIndex: 1
+        }}></div>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="grid grid-2" style={{ alignItems: 'center' }}>
             <div>
-              <h1 style={{ color: 'white', fontSize: '3rem', marginBottom: '1.5rem' }}>
+              <h1 style={{
+                color: 'white',
+                fontSize: '3rem',
+                marginBottom: '1.5rem'
+              }}>
                 Welcome to GreenMarket:
-                <span style={{ color: 'var(--accent-green)' }}> Campus Giving & Sharing</span>
+                <span style={{ color: 'white' }}> Campus Giving & Sharing</span>
               </h1>
-              <p style={{ fontSize: '1.2rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+              <p style={{
+                fontSize: '1.2rem',
+                marginBottom: '2rem',
+                lineHeight: '1.6'
+              }}>
                 Donate items you no longer need and receive items from our community. 
                 GreenMarket connects UMN Crookston students and faculty to reduce waste 
                 and support each other. Share with purpose, live sustainably.
@@ -107,9 +128,7 @@ function Home() {
                 </Link>
               </div>
             </div>
-            <div style={{ textAlign: 'center', fontSize: '8rem' }}>
-              🌱
-            </div>
+            <div></div>
           </div>
         </div>
       </section>

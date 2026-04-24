@@ -105,11 +105,24 @@ function Contact() {
     <div>
       {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, var(--primary-green), var(--light-green))',
+        backgroundImage: 'url(/ContactPageImg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
         color: 'white',
-        padding: '3rem 0'
+        padding: 'calc(3rem + 25px) 0'
       }}>
-        <div className="container text-center">
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          zIndex: 1
+        }}></div>
+        <div className="container text-center" style={{ position: 'relative', zIndex: 2 }}>
           <MessageSquare size={48} color="var(--accent-green)" style={{ margin: '0 auto 1rem' }} />
           <h1 style={{ color: 'white', marginBottom: '1rem' }}>
             Get in Touch

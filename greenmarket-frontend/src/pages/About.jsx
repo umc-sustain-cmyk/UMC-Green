@@ -44,11 +44,6 @@ function About() {
       icon: <Heart size={48} color="var(--accent-green)" />,
       title: 'Generosity',
       description: 'Helping students and faculty access items they need freely.'
-    },
-    {
-      icon: <Lightbulb size={48} color="var(--accent-green)" />,
-      title: 'Impact',
-      description: 'Creating positive environmental and social change at UMN Crookston.'
     }
   ];
 
@@ -63,16 +58,38 @@ function About() {
     <div>
       {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, var(--primary-green), var(--light-green))',
+        backgroundImage: 'url(/AboutPageImg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative',
         color: 'white',
         padding: '4rem 0'
       }}>
-        <div className="container">
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          zIndex: 1
+        }}></div>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="text-center">
-            <h1 style={{ color: 'white', fontSize: '3rem', marginBottom: '1.5rem' }}>
+            <h1 style={{
+              color: 'white',
+              fontSize: '3rem',
+              marginBottom: '1.5rem'
+            }}>
               About GreenMarket
             </h1>
-            <p style={{ fontSize: '1.3rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
+            <p style={{
+              fontSize: '1.3rem',
+              maxWidth: '600px',
+              margin: '0 auto',
+              lineHeight: '1.6'
+            }}>
               GreenMarket is a campus donation platform where UMN Crookston students and faculty 
               can post extra items they no longer need. Other community members can browse, reserve items, 
               and contact donors to arrange pickup—reducing waste and building community connections.
@@ -87,7 +104,6 @@ function About() {
           <div className="grid grid-2" style={{ alignItems: 'center' }}>
             <div>
               <div className="flex gap-2 mb-3">
-                <Target size={32} color="var(--primary-green)" />
                 <h2>Our Mission</h2>
               </div>
               <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '2rem' }}>
@@ -102,8 +118,17 @@ function About() {
                 our UMN Crookston community. It's a win-win for people and the planet.
               </p>
             </div>
-            <div style={{ textAlign: 'center', fontSize: '12rem' }}>
-              🌍
+            <div style={{ textAlign: 'center' }}>
+              <img
+                src="/AboutPageVisual.png"
+                alt="GreenMarket Mission"
+                style={{
+                  width: '50%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  borderRadius: '8px'
+                }}
+              />
             </div>
           </div>
         </div>
