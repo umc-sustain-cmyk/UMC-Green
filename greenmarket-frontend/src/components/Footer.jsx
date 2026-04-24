@@ -2,6 +2,11 @@ import React from 'react';
 import { Leaf, Mail, Phone, MapPin } from 'lucide-react';
 
 function Footer() {
+  const handleQuickLinkHover = (event, isHovering) => {
+    event.currentTarget.style.color = isHovering ? 'white' : '#ccc';
+    event.currentTarget.style.transform = isHovering ? 'translateX(4px)' : 'translateX(0)';
+  };
+
   return (
     <footer style={{
       background: 'var(--dark-green)',
@@ -26,16 +31,44 @@ function Footer() {
           <div>
             <h4 style={{ color: 'white', marginBottom: '1rem' }}>Quick Links</h4>
             <div className="flex-column gap-1">
-              <a href="/" style={{ color: '#ccc', textDecoration: 'none' }}>
+              <a
+                href="/"
+                style={{ color: '#ccc', textDecoration: 'none', transition: 'all 0.2s ease' }}
+                onMouseOver={(event) => handleQuickLinkHover(event, true)}
+                onMouseOut={(event) => handleQuickLinkHover(event, false)}
+                onFocus={(event) => handleQuickLinkHover(event, true)}
+                onBlur={(event) => handleQuickLinkHover(event, false)}
+              >
                 Home
               </a>
-              <a href="/marketplace" style={{ color: '#ccc', textDecoration: 'none' }}>
+              <a
+                href="/marketplace"
+                style={{ color: '#ccc', textDecoration: 'none', transition: 'all 0.2s ease' }}
+                onMouseOver={(event) => handleQuickLinkHover(event, true)}
+                onMouseOut={(event) => handleQuickLinkHover(event, false)}
+                onFocus={(event) => handleQuickLinkHover(event, true)}
+                onBlur={(event) => handleQuickLinkHover(event, false)}
+              >
                 Donations
               </a>
-              <a href="/about" style={{ color: '#ccc', textDecoration: 'none' }}>
+              <a
+                href="/about"
+                style={{ color: '#ccc', textDecoration: 'none', transition: 'all 0.2s ease' }}
+                onMouseOver={(event) => handleQuickLinkHover(event, true)}
+                onMouseOut={(event) => handleQuickLinkHover(event, false)}
+                onFocus={(event) => handleQuickLinkHover(event, true)}
+                onBlur={(event) => handleQuickLinkHover(event, false)}
+              >
                 About Us
               </a>
-              <a href="/contact" style={{ color: '#ccc', textDecoration: 'none' }}>
+              <a
+                href="/contact"
+                style={{ color: '#ccc', textDecoration: 'none', transition: 'all 0.2s ease' }}
+                onMouseOver={(event) => handleQuickLinkHover(event, true)}
+                onMouseOut={(event) => handleQuickLinkHover(event, false)}
+                onFocus={(event) => handleQuickLinkHover(event, true)}
+                onBlur={(event) => handleQuickLinkHover(event, false)}
+              >
                 Contact
               </a>
             </div>

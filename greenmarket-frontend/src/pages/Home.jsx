@@ -34,6 +34,12 @@ function Home() {
     setShowAuthPopup(true);
   };
 
+  const handleOutlinedButtonHover = (event, isHovering) => {
+    event.currentTarget.style.background = isHovering ? 'white' : 'transparent';
+    event.currentTarget.style.color = isHovering ? 'var(--primary-green)' : 'white';
+    event.currentTarget.style.transform = isHovering ? 'translateY(-2px)' : 'translateY(0)';
+  };
+
   const features = [
     {
       icon: <Leaf size={48} color="var(--accent-green)" />,
@@ -122,8 +128,14 @@ function Home() {
                 <Link to="/register" className="btn" style={{
                   background: 'transparent',
                   color: 'white',
-                  border: '2px solid white'
-                }}>
+                  border: '2px solid white',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(event) => handleOutlinedButtonHover(event, true)}
+                onMouseOut={(event) => handleOutlinedButtonHover(event, false)}
+                onFocus={(event) => handleOutlinedButtonHover(event, true)}
+                onBlur={(event) => handleOutlinedButtonHover(event, false)}
+                >
                   Join Community
                 </Link>
               </div>
@@ -331,8 +343,14 @@ function Home() {
             <Link to="/register" className="btn" style={{
               background: 'transparent',
               color: 'white',
-              border: '2px solid white'
-            }}>
+              border: '2px solid white',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(event) => handleOutlinedButtonHover(event, true)}
+            onMouseOut={(event) => handleOutlinedButtonHover(event, false)}
+            onFocus={(event) => handleOutlinedButtonHover(event, true)}
+            onBlur={(event) => handleOutlinedButtonHover(event, false)}
+            >
               Become a Donator
             </Link>
           </div>

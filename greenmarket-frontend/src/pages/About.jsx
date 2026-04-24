@@ -2,6 +2,12 @@ import React from 'react';
 import { Leaf, Users, Target, Award, Heart, Lightbulb } from 'lucide-react';
 
 function About() {
+  const handleOutlinedButtonHover = (event, isHovering) => {
+    event.currentTarget.style.background = isHovering ? 'white' : 'transparent';
+    event.currentTarget.style.color = isHovering ? 'var(--primary-green)' : 'white';
+    event.currentTarget.style.transform = isHovering ? 'translateY(-2px)' : 'translateY(0)';
+  };
+
   const team = [
     {
       name: 'Campus Team',
@@ -360,8 +366,14 @@ function About() {
             <a href="/marketplace" className="btn" style={{
               background: 'transparent',
               color: 'white',
-              border: '2px solid white'
-            }}>
+              border: '2px solid white',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(event) => handleOutlinedButtonHover(event, true)}
+            onMouseOut={(event) => handleOutlinedButtonHover(event, false)}
+            onFocus={(event) => handleOutlinedButtonHover(event, true)}
+            onBlur={(event) => handleOutlinedButtonHover(event, false)}
+            >
               Explore Donations
             </a>
           </div>
