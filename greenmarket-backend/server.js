@@ -94,6 +94,20 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 // Start server with DB connection and optional migration handling
 const startServer = async () => {
   try {
+    // Allow local development to skip DB connection entirely when set.
+    if (process.env.SKIP_DB === 'true') {
+      console.log('ℹ️ SKIP_DB=true — skipping database connection and starting server');
+      const server = app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+        console.log(`🌐 Frontend URL: ${frontendUrl || process.env.FRONTEND_URL}`);
+      });
+      server.on('error', (err) => {
+        console.error('❌ Server error:', err);
+        process.exit(1);
+      });
+      return;
+    }
     let retries = 5;
     let connected = false;
     while (retries > 0 && !connected) {
