@@ -1,26 +1,24 @@
 const dotenv = require('dotenv');
 
-// Load environment variables FIRST
+// Load environment variables early
 console.log('🔧 Loading environment variables...');
 dotenv.config();
 console.log('✅ Environment variables loaded');
 
-// Validate critical environment variables
-const requiredEnvVars = ['JWT_SECRET'];
-const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
-
-if (missingEnvVars.length > 0 && process.env.NODE_ENV === 'production') {
-  console.error('🔴 CRITICAL: Missing required environment variables:', missingEnvVars.join(', '));
-  console.error('Please set these in your Railway dashboard before deploying.');
+// Validate required env vars in production
+const requiredEnv = ['JWT_SECRET'];
+const missing = requiredEnv.filter(v => !process.env[v]);
+if (missing.length > 0 && process.env.NODE_ENV === 'production') {
+  console.error('🔴 CRITICAL: Missing required environment variables:', missing.join(', '));
   process.exit(1);
 }
 
-console.log('🔧 Loading Express and dependencies...');
+console.log('🔧 Loading dependencies...');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-console.log('✅ Express and dependencies loaded');
+console.log('✅ Dependencies loaded');
 
 console.log('🔧 Loading database configuration...');
 const sequelize = require('./config/database');
@@ -30,63 +28,35 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const frontendUrl = (process.env.FRONTEND_URL || '').replace(/\/$/, '');
 
-// CORS configuration - must be FIRST before other middleware
-// ⚠️ WARNING: Accepting all origins (*)! Use only for testing.
-// For production, whitelist specific origins (see commented code below).
+// CORS - permissive reflect-origin (matches previous behavior)
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://umc-green.vercel.app',
-      'https://umc-green-vercel.app',
-      'https://umc-green-project-prd-app-01.oit.umn.edu',
-      'http://localhost:5173',
-      'http://localhost:3000'
-    ];
-
-    if (frontendUrl) {
-      allowedOrigins.push(frontendUrl);
-    }
-
-    const normalizedOrigin = origin ? origin.replace(/\/$/, '') : origin;
-
-    // Allow requests with no origin (like mobile apps or server requests)
-    if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed'));
-    }
-  },
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true
 };
 
 app.use(cors(corsOptions));
-
-// Handle preflight requests
 app.options('*', cors(corsOptions));
 
-// Security middleware - apply AFTER CORS
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
-}));
+// Security headers
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// Body parsing middleware
+// Body parsing
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Load routes
 console.log('🔧 Loading routes...');
 try {
-  // Note: ItemImage associations removed (images feature disabled)
-  
   app.use('/api/auth', require('./routes/auth'));
   console.log('✅ Auth routes loaded');
   app.use('/api/users', require('./routes/users'));
@@ -94,118 +64,98 @@ try {
   app.use('/api/items', require('./routes/items'));
   console.log('✅ Item routes loaded');
 } catch (err) {
-  console.error('❌ Failed to load routes:', err.message);
+  console.error('❌ Failed to load routes:', err && err.message ? err.message : err);
   process.exit(1);
 }
 
-// Health check endpoint
+// Health check
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'GreenMarket API is running',
-    timestamp: new Date().toISOString()
-  });
+  res.status(200).json({ success: true, message: 'GreenMarket API is running', timestamp: new Date().toISOString() });
 });
 
-// 404 handler
+// 404
 app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'API endpoint not found'
-  });
+  res.status(404).json({ success: false, message: 'API endpoint not found' });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error('Error:', err.stack);
-  
-  res.status(err.status || 500).json({
+  console.error('Error:', err && err.stack ? err.stack : err);
+  res.status(err && err.status ? err.status : 500).json({
     success: false,
-    message: err.message || 'Internal server error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    message: err && err.message ? err.message : 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err && err.stack ? err.stack : undefined })
   });
 });
 
-// Database connection and server startup
+// Helper for waiting between retries
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Start server with DB connection and optional migration handling
 const startServer = async () => {
   try {
-    // Test database connection with retry logic
     let retries = 5;
     let connected = false;
-    
     while (retries > 0 && !connected) {
       try {
         await sequelize.authenticate();
         console.log('✅ Database connection established successfully');
         connected = true;
-      } catch (dbError) {
+      } catch (dbErr) {
         retries--;
         if (retries > 0) {
-          const waitTime = (6 - retries) * 2000; // 2s, 4s, 6s, 8s, 10s
+          const waitTime = (6 - retries) * 2000;
           console.log(`⚠️ Database connection failed. Retrying in ${waitTime/1000}s... (${retries} attempts left)`);
-          await new Promise(resolve => setTimeout(resolve, waitTime));
+          await wait(waitTime);
         } else {
-          throw dbError;
+          throw dbErr;
         }
       }
     }
-    
-    // Migration strategy:
-    // - In production, we do NOT call `sync()` here. Migrations should be applied during deploy.
-    // - In development you can opt-in to run migrations automatically by setting AUTO_MIGRATE=true
-    // - For tests, migrations are handled by the test setup (sqlite in-memory or CI migrations)
+
+    // Migration/sync policy
     if (process.env.NODE_ENV === 'production') {
-      console.log('ℹ️ Running in production mode – ensure migrations are applied before starting the app.');
+      console.log('ℹ️ Production mode — ensure migrations are applied during deploy.');
     } else if (process.env.NODE_ENV === 'test') {
-      console.log('ℹ️ Test environment detected – skipping runtime migrations/sync.');
+      console.log('ℹ️ Test environment detected — skipping runtime migrations/sync.');
     } else {
       if (process.env.AUTO_MIGRATE === 'true') {
-        console.log('🔁 AUTO_MIGRATE=true — applying migrations before starting server');
-        // Run migrations via sequelize-cli if available
+        console.log('🔁 AUTO_MIGRATE=true — attempting to run migrations');
         try {
           const { execSync } = require('child_process');
           execSync('npx sequelize-cli db:migrate', { stdio: 'inherit' });
-        } catch (err) {
-          console.warn('Failed to run automatic migrations:', err && err.message ? err.message : err);
+        } catch (mErr) {
+          console.warn('Failed to run automatic migrations:', mErr && mErr.message ? mErr.message : mErr);
         }
+      } else if (process.env.AUTO_SYNC === 'true') {
+        await sequelize.sync({ alter: true });
+        console.log('✅ Database models synchronized (sync)');
       } else {
-        // For local dev when you want quick iteration, you can still use sync by setting AUTO_SYNC=true
-        if (process.env.AUTO_SYNC === 'true') {
-          await sequelize.sync({ alter: true });
-          console.log('✅ Database models synchronized (sync)');
-        } else {
-          console.log('ℹ️ Skipping runtime sync. To automatically run migrations in dev set AUTO_MIGRATE=true or to sync set AUTO_SYNC=true');
-        }
+        console.log('ℹ️ Skipping runtime migrations/sync. Set AUTO_MIGRATE or AUTO_SYNC to change this.');
       }
     }
-    
-    // Start server
+
     const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-      console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
+      console.log(`🌐 Frontend URL: ${frontendUrl || process.env.FRONTEND_URL}`);
     });
 
-    // Handle server errors
     server.on('error', (err) => {
       console.error('❌ Server error:', err);
       process.exit(1);
     });
-    
+
   } catch (error) {
-    console.error('❌ Unable to start server:', error.message);
-    console.error('Error details:', error);
-    if (error.name === 'SequelizeConnectionError') {
-      console.error('🔴 DATABASE CONNECTION ERROR - Check that:');
-      console.error('  1. MySQL service is running on Railway');
-      console.error('  2. DATABASE_URL or DB_HOST/DB_USER/DB_PASSWORD env vars are set');
-      console.error('  3. Database credentials are correct');
+    console.error('❌ Unable to start server:', error && error.message ? error.message : error);
+    if (error && error.name === 'SequelizeConnectionError') {
+      console.error('🔴 DATABASE CONNECTION ERROR - check DATABASE_URL / DB_* env vars and DB service');
     }
     process.exit(1);
   }
 };
 
-// Global error handlers (should be near the end, before startServer call)
+// Global process-level handlers
 process.on('uncaughtException', (err) => {
   console.error('❌ Uncaught Exception:', err);
   process.exit(1);
@@ -216,7 +166,7 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
-// Only start the server when not running tests. Tests will import `app` directly.
+// Start unless in test mode (tests import the app)
 console.log('🔧 Checking if server should start (NODE_ENV=' + process.env.NODE_ENV + ')...');
 if (process.env.NODE_ENV !== 'test') {
   console.log('🚀 Starting server...');
