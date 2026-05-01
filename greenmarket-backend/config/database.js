@@ -61,6 +61,15 @@ if (useSqliteInMemory) {
   console.log('  - User:', dbUser);
   console.log('  - Password: ' + (dbPassword ? '***' : '(empty)'));
   
+  // Optional SSL support for hosts that require TLS (set DB_SSL=true)
+  const dialectOptions = {};
+  const wantsSsl = process.env.DB_SSL === 'true' || process.env.DB_REQUIRE_SSL === 'true' || (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ssl=true'));
+  if (wantsSsl) {
+    // Use a permissive TLS option by default to avoid certificate issues in hosted DB providers.
+    dialectOptions.ssl = { rejectUnauthorized: false };
+    console.log('🔐 Database SSL enabled (DB_SSL=true)');
+  }
+
   const sequelize = new Sequelize(
     dbName,
     dbUser,
@@ -69,6 +78,7 @@ if (useSqliteInMemory) {
       host: dbHost,
       port: parseInt(dbPort),
       dialect: 'mysql',
+      dialectOptions: Object.keys(dialectOptions).length ? dialectOptions : undefined,
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       pool: {
         max: 5,
