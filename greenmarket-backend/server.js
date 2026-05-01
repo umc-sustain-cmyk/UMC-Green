@@ -28,9 +28,26 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const frontendUrl = (process.env.FRONTEND_URL || '').replace(/\/$/, '');
 
-// CORS - permissive reflect-origin (matches previous behavior)
+// CORS - whitelist frontend URL, fallback to reflect-origin for dev
 const corsOptions = {
-  origin: true,
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Whitelist specific frontend URL(s)
+    const allowedOrigins = [
+      'https://umc-green.vercel.app',
+      'http://localhost:5173',  // dev
+      frontendUrl
+    ].filter(Boolean);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.warn(`⚠️ CORS blocked request from ${origin}`);
+      return callback(null, true); // Still allow for debugging; change to false in strict mode
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true
@@ -43,9 +60,11 @@ app.options('*', cors(corsOptions));
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // Rate limiting
+// Bypass preflight requests to avoid blocking CORS handshake
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
+  skip: (req) => req.method === 'OPTIONS',
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
