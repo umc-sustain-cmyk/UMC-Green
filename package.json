@@ -6,6 +6,6 @@
     "start": "cd greenmarket-backend && bash start.sh"
   },
   "engines": {
-    "node": "22.x"
+    "node": "25.x"
   }
 }
