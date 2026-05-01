@@ -31,6 +31,8 @@ const PORT = process.env.PORT || 5000;
 const frontendUrl = (process.env.FRONTEND_URL || '').replace(/\/$/, '');
 
 // CORS configuration - must be FIRST before other middleware
+// ⚠️ WARNING: Accepting all origins (*)! Use only for testing.
+// For production, whitelist specific origins (see commented code below).
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
