@@ -39,15 +39,21 @@ echo "📦 Updating system packages..."
 yum update -y
 print_status "System packages updated"
 
-# Install Node.js 18.x
+# Install or upgrade Node.js 18.x
 echo ""
 echo "📦 Installing Node.js 18.x..."
-if ! command -v node &> /dev/null; then
+CURRENT_NODE_MAJOR=0
+if command -v node &> /dev/null; then
+    CURRENT_NODE_MAJOR="$(node -v | sed 's/^v//' | cut -d. -f1)"
+fi
+
+if [ "$CURRENT_NODE_MAJOR" -lt 18 ]; then
+    print_warning "Node.js is missing or older than 18 (current: ${CURRENT_NODE_MAJOR:-not installed}). Upgrading to Node.js 18.x..."
     curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
     yum install -y nodejs
     print_status "Node.js installed: $(node --version)"
 else
-    print_warning "Node.js already installed: $(node --version)"
+    print_warning "Node.js already meets the requirement: $(node --version)"
 fi
 
 # Install Git
@@ -86,7 +92,21 @@ fi
 # Install PM2 globally
 echo ""
 echo "📦 Installing PM2..."
-npm install -g pm2 > /dev/null 2>&1
+if ! npm install -g pm2 > /dev/null 2>&1; then
+    print_error "PM2 installation failed"
+    exit 1
+fi
+
+PM2_BIN_DIR="$(npm bin -g 2>/dev/null || true)"
+if [ -n "$PM2_BIN_DIR" ]; then
+    export PATH="$PM2_BIN_DIR:$PATH"
+fi
+
+if ! command -v pm2 >/dev/null 2>&1; then
+    print_error "PM2 installed but not found on PATH. Try opening a new shell or add the npm global bin directory to PATH."
+    exit 1
+fi
+
 print_status "PM2 installed: $(pm2 --version)"
 
 # Install Certbot for SSL

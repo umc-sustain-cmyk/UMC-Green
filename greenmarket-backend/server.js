@@ -35,6 +35,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
       'https://umc-green.vercel.app',
+      'https://umc-green-vercel.app',
       'https://umc-green-project-prd-app-01.oit.umn.edu',
       'http://localhost:5173',
       'http://localhost:3000'
@@ -44,8 +45,10 @@ const corsOptions = {
       allowedOrigins.push(frontendUrl);
     }
 
+    const normalizedOrigin = origin ? origin.replace(/\/$/, '') : origin;
+
     // Allow requests with no origin (like mobile apps or server requests)
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
       callback(new Error('CORS not allowed'));
