@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cd greenmarket-backend && bash start.sh"
+    "start": "cd greenmarket-backend && bash start.sh",
+    "build": "npm install --prefix greenmarket-frontend && npm run build --prefix greenmarket-frontend",
+    "vercel-build": "npm run build"
   },
   "engines": {
     "node": "25.x"
